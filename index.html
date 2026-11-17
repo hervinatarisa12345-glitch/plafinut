@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PLAFINUT — Interior Plafon PVC</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Playfair Display (Luxury Serif) & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            butterBg: '#FFFDF2',       /* Ultra-soft warm cream */
+            brandBrown: '#4A2311',     /* Rich deep espresso brown */
+            brandSub: '#7C4325',       /* Warm mocha brown */
+            butterGold: '#FFC82C',     /* Warm golden butter yellow */
+            butterGoldHover: '#E0AD1F',
+            cardBg: '#FFFFFF',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FFFDF2;
+      color: #4A2311;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .glass-card-aesthetic {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 200, 44, 0.3);
+      box-shadow: 0 20px 50px -15px rgba(124, 67, 37, 0.08);
+    }
+
+    .aesthetic-shadow {
+      box-shadow: 0 10px 30px -5px rgba(255, 200, 44, 0.4);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-yellow-200 relative overflow-x-hidden">
+
+  <!-- Aesthetic Ambient Background Glows -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-b from-yellow-200/40 via-amber-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- NAVBAR (Login Admin & Login Kasir di Kanan Atas) -->
+  <nav class="w-full py-6 px-6 sm:px-14 relative z-10">
+    <div class="max-w-7xl mx-auto flex justify-end items-center gap-3 sm:gap-4">
+      <!-- Portal Admin -->
+      <a href="login_admin.php" class="px-5 py-2.5 rounded-full bg-white/80 border border-yellow-300/80 text-brandBrown font-bold text-xs sm:text-sm hover:bg-yellow-50 transition-all duration-300 shadow-sm flex items-center gap-2 backdrop-blur-md hover:scale-105 active:scale-95">
+        <span>🔒</span>
+        <span>Portal Admin</span>
+      </a>
+      
+      <!-- Portal Kasir -->
+      <a href="login_kasir.php" class="px-5 py-2.5 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs sm:text-sm transition-all duration-300 aesthetic-shadow flex items-center gap-2 hover:scale-105 active:scale-95">
+        <span>💻</span>
+        <span>Portal Kasir</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- BERANDA UTAMA (Logo, Nama Usaha, & Akses Pelanggan di Tengah) -->
+  <main class="flex-grow flex items-center justify-center px-4 py-8 relative z-10">
+    <div class="max-w-xl w-full text-center space-y-7">
+      
+      <!-- LOGO DAN NAMA USAHA (Tengah-tengah Beranda) -->
+      <div class="flex flex-col items-center justify-center space-y-4">
+        
+        <!-- Wadah Gambar Logo (logo.jpg) -->
+        <div class="relative group">
+          <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-300 to-amber-400 opacity-60 blur transition duration-500 group-hover:opacity-100"></div>
+          <div class="relative w-28 h-28 rounded-full border-2 border-yellow-200/80 bg-white flex items-center justify-center shadow-lg overflow-hidden">
+            <!-- Menampilkan file gambar logo.jpg -->
+            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=200&q=80';" />
+          </div>
+        </div>
+        
+        <!-- Judul & Tagline -->
+        <div class="space-y-2 pt-2">
+          <div class="inline-block px-4 py-1 rounded-full bg-amber-100/60 border border-amber-200 text-brandSub font-semibold text-xs tracking-widest uppercase">
+            SOLUSI INTERIOR PLAFON PVC TERBAIK
+          </div>
+          <h1 class="font-serif text-5xl sm:text-7xl font-extrabold tracking-tight text-brandBrown leading-none">
+            PLAFINUT
+          </h1>
+        </div>
+      </div>
+
+      <!-- DESKRIPSI SINGKAT & AKSES MASUK PELANGGAN -->
+      <div class="glass-card-aesthetic rounded-3xl p-7 sm:p-9 space-y-6">
+        <p class="text-brandSub text-sm sm:text-base leading-relaxed font-normal">
+          Selamat datang di sistem manajemen interior <span class="font-bold text-brandBrown">PLAFINUT</span>. Temukan berbagai koleksi plafon PVC berkualitas tinggi, tahan air, dan anti rayap untuk hunian Anda.
+        </p>
+
+        <!-- OPSI LOGIN / MASUK PELANGGAN (Di Bawah Nama Usaha) -->
+        <div class="pt-2">
+          <a href="login_pelanggan.php" class="group relative inline-flex items-center justify-center w-full py-4 px-6 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-base transition-all duration-300 aesthetic-shadow hover:scale-[1.02] active:scale-95">
+            <span>Mulai Belanja Sekarang</span>
+            <span class="ml-2 group-hover:translate-x-1 transition-transform duration-200">→</span>
+          </a>
+          
+          <p class="text-xs text-brandSub mt-4 font-medium">
+            Belum punya akun? <a href="register_pelanggan.php" class="text-brandBrown font-bold underline hover:text-amber-900 transition-colors">Daftar Akun Baru</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm relative z-10">
+    <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
