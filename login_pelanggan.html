@@ -1,77 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
-include 'config.php';
-
-$pesan_sukses = "";
-$pesan_error = "";
-
-// 1. Proses Login Pelanggan
-if (isset($_POST['login_pelanggan'])) {
-    $username = mysqli_real_escape_string($conn, trim($_POST['username']));
-    $password = trim($_POST['password']);
-
-    if (!empty($username) && !empty($password)) {
-        $query = "SELECT * FROM t_pelanggan WHERE username = '$username' LIMIT 1";
-        $result = mysqli_query($conn, $query);
-
-        if ($result && mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            
-            // Verifikasi password
-            if ($password === $row['password'] || password_verify($password, $row['password'])) {
-                $_SESSION['pelanggan_logged'] = true;
-                $_SESSION['id_pelanggan'] = $row['id_pelanggan'];
-                $_SESSION['nama_pelanggan'] = $row['nama_pelanggan'];
-                $_SESSION['username'] = $row['username'];
-
-                header("Location: produk.php"); // Diarahkan ke halaman katalog/belanja pelanggan
-                exit();
-            } else {
-                $pesan_error = "Password yang Anda masukkan salah!";
-            }
-        } else {
-            $pesan_error = "Username tidak ditemukan. Silakan daftar terlebih dahulu.";
-        }
-    } else {
-        $pesan_error = "Mohon isi username dan password.";
-    }
-}
-
-// 2. Proses Registrasi Pelanggan Baru
-if (isset($_POST['register_pelanggan'])) {
-    $nama_pelanggan = mysqli_real_escape_string($conn, trim($_POST['nama_pelanggan']));
-    $no_telepon     = mysqli_real_escape_string($conn, trim($_POST['no_telepon']));
-    $email          = mysqli_real_escape_string($conn, trim($_POST['email']));
-    $username       = mysqli_real_escape_string($conn, trim($_POST['username']));
-    $password       = trim($_POST['password']);
-
-    if (!empty($nama_pelanggan) && !empty($username) && !empty($password)) {
-        // Cek apakah username sudah digunakan
-        $cek_user = mysqli_query($conn, "SELECT * FROM t_pelanggan WHERE username = '$username'");
-        if (mysqli_num_rows($cek_user) > 0) {
-            $pesan_error = "Username sudah digunakan, silakan pilih username lain.";
-        } else {
-            // Simpan data ke database t_pelanggan sesuai struktur kolom phpMyAdmin
-            $query_insert = "INSERT INTO t_pelanggan (nama_pelanggan, no_telepon, email, username, password) 
-                             VALUES ('$nama_pelanggan', '$no_telepon', '$email', '$username', '$password')";
-            
-            if (mysqli_query($conn, $query_insert)) {
-                $pesan_sukses = "Registrasi berhasil! Silakan masuk menggunakan akun Anda.";
-            } else {
-                $pesan_error = "Gagal mendaftar: " . mysqli_error($conn);
-            }
-        }
-    } else {
-        $pesan_error = "Kolom Nama, Username, dan Password wajib diisi!";
-    }
-}
-?>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Masuk & Daftar Pelanggan — PLAFINUT</title>
@@ -112,18 +41,19 @@ if (isset($_POST['register_pelanggan'])) {
       <p class="text-xs text-[#7C4325]">Silakan masuk atau daftar akun untuk berbelanja</p>
     </div>
 
-    <!-- Notifikasi Pesan -->
-    <?php if ($pesan_sukses): ?>
-      <div class="p-3 bg-green-100 border border-green-200 text-green-700 rounded-xl text-xs font-bold text-center">
-        <?php echo $pesan_sukses; ?>
-      </div>
-    <?php endif; ?>
+    <!-- Notifikasi Pesan Sukses (Opsional / Contoh Statis) -->
+    <!-- 
+    <div class="p-3 bg-green-100 border border-green-200 text-green-700 rounded-xl text-xs font-bold text-center">
+      Registrasi berhasil! Silakan masuk menggunakan akun Anda.
+    </div>
+    -->
 
-    <?php if ($pesan_error): ?>
-      <div class="p-3 bg-red-100 border border-red-200 text-red-700 rounded-xl text-xs font-bold text-center">
-        <?php echo $pesan_error; ?>
-      </div>
-    <?php endif; ?>
+    <!-- Notifikasi Pesan Error (Opsional / Contoh Statis) -->
+    <!-- 
+    <div class="p-3 bg-red-100 border border-red-200 text-red-700 rounded-xl text-xs font-bold text-center">
+      Username atau password salah!
+    </div>
+    -->
 
     <!-- Tombol Tab Switcher -->
     <div class="flex bg-amber-50 p-1.5 rounded-2xl border border-amber-200">
@@ -136,7 +66,7 @@ if (isset($_POST['register_pelanggan'])) {
     </div>
 
     <!-- FORM LOGIN -->
-    <form id="form-login" action="login_pelanggan.php" method="POST" class="space-y-4">
+    <form id="form-login" action="#" method="POST" class="space-y-4">
       <div class="space-y-1 text-xs font-semibold">
         <label class="text-[#7C4325] uppercase">Username</label>
         <input type="text" name="username" required placeholder="Masukkan username Anda" class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
@@ -153,7 +83,7 @@ if (isset($_POST['register_pelanggan'])) {
     </form>
 
     <!-- FORM REGISTER -->
-    <form id="form-register" action="login_pelanggan.php" method="POST" class="space-y-3.5 hidden">
+    <form id="form-register" action="#" method="POST" class="space-y-3.5 hidden">
       <div class="space-y-1 text-xs font-semibold">
         <label class="text-[#7C4325] uppercase">Nama Lengkap</label>
         <input type="text" name="nama_pelanggan" required placeholder="Contoh: Budi Santoso" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
