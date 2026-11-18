@@ -41,250 +41,193 @@
     .glass-card-aesthetic { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255, 200, 44, 0.3); box-shadow: 0 20px 50px -15px rgba(124, 67, 37, 0.08); }
     .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 200, 44, 0.3); box-shadow: 0 20px 50px -15px rgba(124, 67, 37, 0.08); }
     .aesthetic-shadow { box-shadow: 0 10px 30px -5px rgba(255, 200, 44, 0.4); }
-    .view-section { display: none; }
-    .view-section.active { display: flex; }
-    .view-block { display: none; }
-    .view-block.active { display: block; }
-    @media print { body { background-color: white !important; } .no-print { display: none !important; } .print-shadow { box-shadow: none !important; border: none !important; } }
+    
+    /* Pengaturan Tampilan Halaman agar tidak saling menumpuk */
+    .app-view { display: none; }
+    .app-view.active { display: flex; flex-direction: column; }
+
+    @media print { body { background-color: white !important; } .no-print { display: none !important; } }
   </style>
 </head>
-<body class="bg-butterBg text-brandBrown font-sans min-h-screen selection:bg-yellow-200 relative overflow-x-hidden">
+<body class="bg-butterBg text-brandBrown font-sans min-h-screen relative selection:bg-yellow-200">
 
   <!-- 1. VIEW: BERANDA UTAMA -->
-  <div id="view-home" class="view-section active min-h-screen flex-col justify-between relative">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-b from-yellow-200/40 via-amber-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+  <div id="view-home" class="app-view active min-h-screen justify-between relative">
     <nav class="w-full py-6 px-6 sm:px-14 relative z-10">
-      <div class="max-w-7xl mx-auto flex justify-end items-center gap-3 sm:gap-4">
-        <button onclick="navigate('login-admin')" class="px-5 py-2.5 rounded-full bg-white/80 border border-yellow-300/80 text-brandBrown font-bold text-xs sm:text-sm hover:bg-yellow-50 shadow-sm flex items-center gap-2"><span>🔒</span><span>Portal Admin</span></button>
-        <button onclick="navigate('login-kasir')" class="px-5 py-2.5 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs sm:text-sm aesthetic-shadow flex items-center gap-2"><span>💻</span><span>Portal Kasir</span></button>
+      <div class="max-w-7xl mx-auto flex justify-end items-center gap-3">
+        <button onclick="navigate('login-admin')" class="px-5 py-2.5 rounded-full bg-white/80 border border-yellow-300 text-brandBrown font-bold text-xs shadow-sm hover:bg-yellow-50 cursor-pointer">🔒 Portal Admin</button>
+        <button onclick="navigate('login-kasir')" class="px-5 py-2.5 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs aesthetic-shadow cursor-pointer">💻 Portal Kasir</button>
       </div>
     </nav>
     <main class="flex-grow flex items-center justify-center px-4 py-8 relative z-10">
       <div class="max-w-xl w-full text-center space-y-7">
         <div class="flex flex-col items-center justify-center space-y-4">
-          <div class="relative w-28 h-28 rounded-full border-2 border-yellow-200/80 bg-white flex items-center justify-center shadow-lg overflow-hidden">
+          <div class="w-28 h-28 rounded-full border-2 border-yellow-200 bg-white flex items-center justify-center shadow-lg overflow-hidden">
             <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=500&q=80'" />
           </div>
-          <div class="space-y-2 pt-2">
-            <div class="inline-block px-4 py-1 rounded-full bg-amber-100/60 border border-amber-200 text-brandSub font-semibold text-xs tracking-widest uppercase">SOLUSI INTERIOR PLAFON PVC TERBAIK</div>
-            <h1 class="font-serif text-5xl sm:text-7xl font-extrabold tracking-tight text-brandBrown leading-none">PLAFINUT</h1>
-          </div>
+          <h1 class="font-serif text-5xl sm:text-7xl font-extrabold text-brandBrown">PLAFINUT</h1>
         </div>
-        <div class="glass-card-aesthetic rounded-3xl p-7 sm:p-9 space-y-6">
-          <p class="text-brandSub text-sm sm:text-base leading-relaxed font-normal">Selamat datang di sistem manajemen interior <span class="font-bold text-brandBrown">PLAFINUT</span> tersambung database MySQL.</p>
-          <div class="pt-2">
-            <button onclick="navigate('login-pelanggan', 'login')" class="w-full py-4 px-6 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-base aesthetic-shadow transition">Mulai Belanja Sekarang →</button>
-            <p class="text-xs text-brandSub mt-4 font-medium">Belum punya akun? <button onclick="navigate('login-pelanggan', 'register')" class="text-brandBrown font-bold underline">Daftar Akun Baru</button></p>
-          </div>
+        <div class="glass-card-aesthetic rounded-3xl p-7 space-y-6">
+          <p class="text-brandSub text-sm">Sistem manajemen interior plafon PVC terhubung database MySQL.</p>
+          <button onclick="navigate('login-pelanggan', 'login')" class="w-full py-4 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-base aesthetic-shadow cursor-pointer">Mulai Belanja Sekarang →</button>
+          <p class="text-xs text-brandSub">Belum punya akun? <button onclick="navigate('login-pelanggan', 'register')" class="text-brandBrown font-bold underline cursor-pointer">Daftar Akun Baru</button></p>
         </div>
       </div>
     </main>
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm relative z-10"><p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p></footer>
+    <footer class="py-6 text-center text-xs text-brandSub/70 border-t bg-white/30"><p>&copy; 2026 PLAFINUT Interior.</p></footer>
   </div>
 
-  <!-- 2. VIEW: LOGIN & REGISTER PELANGGAN -->
-  <div id="view-login-pelanggan" class="view-section min-h-screen items-center justify-center p-6">
+  <!-- 2. VIEW: LOGIN / REGISTER PELANGGAN -->
+  <div id="view-login-pelanggan" class="app-view min-h-screen items-center justify-center p-6">
     <div class="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl border border-yellow-200 space-y-6">
-      <div class="text-center space-y-2">
-        <h1 class="text-2xl font-bold font-serif text-[#4A2311]">PLAFINUT Pelanggan</h1>
-        <p class="text-xs text-[#7C4325]">Masuk atau daftar akun database</p>
-      </div>
+      <div class="text-center space-y-2"><h1 class="text-2xl font-bold font-serif text-[#4A2311]">PLAFINUT Pelanggan</h1></div>
       <div id="pelanggan-auth-msg" class="hidden p-3 rounded-xl text-xs font-bold text-center"></div>
-      <div class="flex bg-amber-50 p-1.5 rounded-2xl border border-amber-200">
-        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-3 text-center font-bold text-xs bg-amber-400 text-amber-950 rounded-2xl shadow">Masuk</button>
-        <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-3 text-center font-bold text-xs bg-amber-50 text-amber-800 rounded-2xl">Daftar</button>
+      <div class="flex bg-amber-50 p-1.5 rounded-2xl border">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-3 text-center font-bold text-xs bg-amber-400 rounded-2xl cursor-pointer">Masuk</button>
+        <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-3 text-center font-bold text-xs rounded-2xl cursor-pointer">Daftar</button>
       </div>
-      <form id="form-login-pelanggan" onsubmit="handlePelangganLogin(event)" class="space-y-4">
-        <div class="space-y-1 text-xs font-semibold"><label>Username</label><input type="text" id="login-pel-user" required class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <div class="space-y-1 text-xs font-semibold"><label>Password</label><input type="password" id="login-pel-pass" required class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <button type="submit" class="w-full py-3.5 bg-[#FFC82C] text-[#4A2311] font-bold rounded-2xl text-xs shadow">Masuk Sekarang 🚀</button>
+      <form id="form-login-pelanggan" onsubmit="handlePelangganLogin(event)" class="space-y-4 text-xs">
+        <div><label class="font-bold">Username</label><input type="text" id="login-pel-user" required class="w-full p-3 bg-amber-50 border rounded-2xl"></div>
+        <div><label class="font-bold">Password</label><input type="password" id="login-pel-pass" required class="w-full p-3 bg-amber-50 border rounded-2xl"></div>
+        <button type="submit" class="w-full py-3.5 bg-butterGold font-bold rounded-2xl shadow cursor-pointer">Masuk Sekarang 🚀</button>
       </form>
-      <form id="form-register-pelanggan" onsubmit="handlePelangganRegister(event)" class="space-y-3.5 hidden">
-        <div class="space-y-1 text-xs font-semibold"><label>Nama Lengkap</label><input type="text" id="reg-pel-nama" required class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <div class="space-y-1 text-xs font-semibold"><label>No. Telepon</label><input type="text" id="reg-pel-telp" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <div class="space-y-1 text-xs font-semibold"><label>Email</label><input type="email" id="reg-pel-email" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <div class="space-y-1 text-xs font-semibold"><label>Username</label><input type="text" id="reg-pel-user" required class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <div class="space-y-1 text-xs font-semibold"><label>Password</label><input type="password" id="reg-pel-pass" required class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <button type="submit" class="w-full py-3.5 bg-amber-500 text-white font-bold rounded-2xl text-xs shadow">Daftar Akun ✨</button>
+      <form id="form-register-pelanggan" onsubmit="handlePelangganRegister(event)" class="space-y-3.5 hidden text-xs">
+        <div><label class="font-bold">Nama Lengkap</label><input type="text" id="reg-pel-nama" required class="w-full p-3 bg-amber-50 border rounded-2xl"></div>
+        <div><label class="font-bold">No. Telepon</label><input type="text" id="reg-pel-telp" class="w-full p-3 bg-amber-50 border rounded-2xl"></div>
+        <div><label class="font-bold">Email</label><input type="email" id="reg-pel-email" class="w-full p-3 bg-amber-50 border rounded-2xl"></div>
+        <div><label class="font-bold">Username</label><input type="text" id="reg-pel-user" required class="w-full p-3 bg-amber-50 border rounded-2xl"></div>
+        <div><label class="font-bold">Password</label><input type="password" id="reg-pel-pass" required class="w-full p-3 bg-amber-50 border rounded-2xl"></div>
+        <button type="submit" class="w-full py-3.5 bg-amber-500 text-white font-bold rounded-2xl shadow cursor-pointer">Daftar Akun ✨</button>
       </form>
-      <div class="text-center pt-2 border-t"><button onclick="navigate('home')" class="text-xs text-[#7C4325] underline font-semibold">← Kembali ke Beranda</button></div>
+      <div class="text-center pt-2 border-t"><button onclick="navigate('home')" class="text-xs text-brandSub underline font-semibold cursor-pointer">← Kembali ke Beranda</button></div>
     </div>
   </div>
 
   <!-- 3. VIEW: LOGIN KASIR -->
-  <div id="view-login-kasir" class="view-section min-h-screen items-center justify-center p-6">
+  <div id="view-login-kasir" class="app-view min-h-screen items-center justify-center p-6">
     <div class="max-w-md w-full bg-white p-8 rounded-3xl border border-yellow-200 shadow-sm space-y-6">
-      <div class="text-center space-y-2"><h1 class="text-2xl font-serif font-extrabold text-brandBrown">Login Kasir</h1><p class="text-xs text-brandSub">Akses database kasir</p></div>
-      <div id="kasir-login-error" class="hidden p-3 bg-red-100 text-red-700 rounded-2xl text-xs font-bold text-center"></div>
+      <div class="text-center"><h1 class="text-2xl font-serif font-extrabold text-brandBrown">Login Kasir</h1></div>
       <form onsubmit="handleKasirLogin(event)" class="space-y-4 text-xs font-semibold">
-        <div><label>Username Kasir</label><input type="text" id="kasir-user" required class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <div><label>Password</label><input type="password" id="kasir-pass" required class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl"></div>
-        <button type="submit" class="w-full py-4 bg-butterGold text-brandBrown font-bold rounded-2xl text-xs shadow">Masuk Kasir ➔</button>
+        <div><label>Username</label><input type="text" id="kasir-user" required class="w-full p-3.5 bg-amber-50 border rounded-2xl"></div>
+        <div><label>Password</label><input type="password" id="kasir-pass" required class="w-full p-3.5 bg-amber-50 border rounded-2xl"></div>
+        <button type="submit" class="w-full py-4 bg-butterGold text-brandBrown font-bold rounded-2xl shadow cursor-pointer">Masuk Kasir ➔</button>
       </form>
-      <div class="text-center pt-2"><button onclick="navigate('home')" class="text-xs text-brandSub underline">← Kembali</button></div>
+      <div class="text-center pt-2"><button onclick="navigate('home')" class="text-xs text-brandSub underline cursor-pointer">← Kembali</button></div>
     </div>
   </div>
 
   <!-- 4. VIEW: LOGIN ADMIN -->
-  <div id="view-login-admin" class="view-section min-h-screen flex-col justify-between relative">
-    <nav class="w-full py-6 px-6 sm:px-12"><button onclick="navigate('home')" class="text-xs font-bold text-brandSub">← Kembali</button></nav>
-    <main class="flex-grow flex items-center justify-center px-4 py-8">
+  <div id="view-login-admin" class="app-view min-h-screen justify-between">
+    <nav class="w-full py-6 px-12"><button onclick="navigate('home')" class="text-xs font-bold text-brandSub cursor-pointer">← Kembali</button></nav>
+    <main class="flex-grow flex items-center justify-center px-4">
       <div class="max-w-md w-full glass-card rounded-3xl p-8 space-y-6">
-        <div class="text-center space-y-2"><h1 class="font-serif text-3xl font-extrabold text-brandBrown">Login Admin</h1></div>
-        <div id="admin-login-error" class="hidden p-3 rounded-2xl bg-red-100 text-red-700 text-xs font-semibold text-center"></div>
+        <h1 class="font-serif text-3xl font-extrabold text-brandBrown text-center">Login Admin</h1>
         <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs font-semibold">
-          <div><label>Username Admin</label><input type="text" id="admin-user" required class="w-full bg-amber-50/50 border border-amber-200 rounded-2xl p-3.5" /></div>
-          <div><label>Password</label><input type="password" id="admin-pass" required class="w-full bg-amber-50/50 border border-amber-200 rounded-2xl p-3.5" /></div>
-          <button type="submit" class="w-full py-4 rounded-full bg-butterGold text-brandBrown font-bold text-base shadow">Masuk Admin</button>
+          <div><label>Username</label><input type="text" id="admin-user" required class="w-full bg-amber-50 border rounded-2xl p-3.5" /></div>
+          <div><label>Password</label><input type="password" id="admin-pass" required class="w-full bg-amber-50 border rounded-2xl p-3.5" /></div>
+          <button type="submit" class="w-full py-4 rounded-full bg-butterGold text-brandBrown font-bold text-base shadow cursor-pointer">Masuk Admin</button>
         </form>
       </div>
     </main>
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t"><p>&copy; 2026 PLAFINUT Interior.</p></footer>
+    <footer class="py-6 text-center text-xs border-t">PLAFINUT</footer>
   </div>
 
   <!-- 5. VIEW: KATALOG PRODUK -->
-  <div id="view-produk" class="view-section min-h-screen flex-col justify-between">
+  <div id="view-produk" class="app-view min-h-screen justify-between">
     <header class="w-full py-5 px-6 sm:px-12 bg-white/80 border-b sticky top-0 z-50 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <h1 class="font-serif font-bold text-lg text-brandBrown">PLAFINUT</h1>
-      </div>
+      <h1 class="font-serif font-bold text-lg text-brandBrown">PLAFINUT</h1>
       <div id="produk-nav-actions" class="flex items-center gap-3"></div>
     </header>
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-10 space-y-8">
-      <div id="produk-notif" class="hidden p-4 rounded-2xl text-xs font-bold text-center"></div>
-      <div class="text-center space-y-3 max-w-2xl mx-auto"><h2 class="text-3xl font-serif font-extrabold text-brandBrown">Katalog Produk Plafon PVC</h2></div>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-10 space-y-8">
+      <h2 class="text-3xl font-serif font-extrabold text-brandBrown text-center">Katalog Produk Plafon PVC</h2>
       <div id="produk-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
   </div>
 
-  <!-- 6. VIEW: KERANJANG BELANJA -->
-  <div id="view-keranjang" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 bg-white border-b flex justify-between items-center"><h1 class="font-serif font-bold text-brandBrown">Keranjang Belanja</h1><button onclick="navigate('produk')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold">← Produk</button></header>
-    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-10 space-y-6"><div id="keranjang-content"></div></main>
+  <!-- 6. VIEW: KERANJANG -->
+  <div id="view-keranjang" class="app-view min-h-screen justify-between">
+    <header class="w-full py-5 px-6 bg-white border-b flex justify-between items-center"><h1 class="font-serif font-bold">Keranjang</h1><button onclick="navigate('produk')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold cursor-pointer">← Katalog</button></header>
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-10"><div id="keranjang-content"></div></main>
   </div>
 
   <!-- 7. VIEW: CHECKOUT -->
-  <div id="view-checkout" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 bg-white border-b flex justify-between items-center"><h1 class="font-serif font-bold text-brandBrown">Checkout Pesanan</h1><button onclick="navigate('keranjang')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold">← Keranjang</button></header>
+  <div id="view-checkout" class="app-view min-h-screen justify-between">
+    <header class="w-full py-5 px-6 bg-white border-b flex justify-between items-center"><h1 class="font-serif font-bold">Checkout</h1><button onclick="navigate('keranjang')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold cursor-pointer">← Keranjang</button></header>
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-10">
       <form onsubmit="handleCheckout(event)" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-6">
-          <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4">
-            <h3 class="font-bold text-brandBrown">📍 Informasi Pengiriman</h3>
-            <div><label class="text-xs font-bold">Nama Penerima</label><input type="text" id="checkout-nama" readonly class="w-full p-3 bg-gray-100 border rounded-2xl text-xs font-bold"></div>
-            <div><label class="text-xs font-bold">Alamat Pengiriman</label><textarea id="checkout-alamat" required rows="3" class="w-full p-3 bg-amber-50 border rounded-2xl text-xs"></textarea></div>
-            <div><label class="text-xs font-bold">Catatan</label><textarea id="checkout-catatan" rows="2" class="w-full p-3 bg-amber-50 border rounded-2xl text-xs"></textarea></div>
-          </div>
-          <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4">
-            <h3 class="font-bold text-brandBrown">💳 Metode Pembayaran</h3>
-            <div class="grid grid-cols-2 gap-4 text-xs">
-              <label class="p-4 border rounded-2xl cursor-pointer bg-amber-50"><input type="radio" name="metode_pembayaran" value="Transfer Bank" required> Transfer Bank</label>
-              <label class="p-4 border rounded-2xl cursor-pointer bg-amber-50"><input type="radio" name="metode_pembayaran" value="QRISS" required> QRISS</label>
-              <label class="p-4 border rounded-2xl cursor-pointer bg-amber-50"><input type="radio" name="metode_pembayaran" value="COD" required> COD</label>
-              <label class="p-4 border rounded-2xl cursor-pointer bg-amber-50"><input type="radio" name="metode_pembayaran" value="Kredit" required> Kredit</label>
+        <div class="lg:col-span-2 space-y-6 bg-white p-6 rounded-3xl border shadow-sm">
+          <h3 class="font-bold">📍 Pengiriman</h3>
+          <div><label class="text-xs font-bold">Penerima</label><input type="text" id="checkout-nama" readonly class="w-full p-3 bg-gray-100 border rounded-2xl text-xs font-bold"></div>
+          <div><label class="text-xs font-bold">Alamat</label><textarea id="checkout-alamat" required rows="3" class="w-full p-3 bg-amber-50 border rounded-2xl text-xs"></textarea></div>
+          <div><label class="text-xs font-bold">Metode Pembayaran</label>
+            <div class="grid grid-cols-2 gap-2 mt-2 text-xs">
+              <label class="p-3 border rounded-xl cursor-pointer bg-amber-50"><input type="radio" name="metode_pembayaran" value="Transfer Bank" required> Transfer Bank</label>
+              <label class="p-3 border rounded-xl cursor-pointer bg-amber-50"><input type="radio" name="metode_pembayaran" value="QRISS" required> QRISS</label>
+              <label class="p-3 border rounded-xl cursor-pointer bg-amber-50"><input type="radio" name="metode_pembayaran" value="COD" required> COD</label>
             </div>
           </div>
         </div>
         <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4 h-fit">
-          <h3 class="font-bold text-brandBrown">Ringkasan Pesanan</h3>
-          <div id="checkout-summary-items" class="space-y-2 text-xs"></div>
+          <h3 class="font-bold">Ringkasan</h3>
+          <div id="checkout-summary-items" class="text-xs space-y-2"></div>
           <div class="pt-4 border-t flex justify-between font-bold text-sm"><span>Total:</span><span id="checkout-total">Rp 0</span></div>
-          <button type="submit" class="w-full py-4 bg-butterGold text-brandBrown font-bold rounded-2xl text-xs shadow">Buat Pesanan 🔒</button>
+          <button type="submit" class="w-full py-3.5 bg-butterGold font-bold rounded-2xl text-xs shadow cursor-pointer">Buat Pesanan 🔒</button>
         </div>
       </form>
     </main>
   </div>
 
   <!-- 8. VIEW: PEMBAYARAN -->
-  <div id="view-pembayaran" class="view-section min-h-screen flex-col justify-between">
-    <main class="flex-grow max-w-xl w-full mx-auto px-4 py-12">
-      <div class="bg-white p-8 rounded-3xl border shadow-sm space-y-6 text-center">
-        <h2 class="text-2xl font-serif font-extrabold text-brandBrown">Selesaikan Pembayaran</h2>
-        <p class="text-xs text-brandSub">Metode: <b id="pay-method">-</b></p>
-        <div class="p-4 bg-amber-50 rounded-2xl"><span class="text-xs block font-bold">Total Tagihan:</span><span id="pay-total" class="text-2xl font-serif font-extrabold text-brandBrown">Rp 0</span></div>
-        <div id="pay-instructions" class="text-xs text-left bg-gray-50 p-4 rounded-2xl"></div>
-        <form onsubmit="handlePaymentUpload(event)" class="space-y-4 text-xs text-left">
-          <label class="font-bold block">Unggah Bukti Pembayaran / Nota</label>
-          <input type="file" id="pay-file" required accept="image/*" class="w-full p-2 border rounded-xl">
-          <button type="submit" class="w-full py-3.5 bg-butterGold text-brandBrown font-bold rounded-2xl shadow">Kirim Bukti 📤</button>
-        </form>
-      </div>
-    </main>
+  <div id="view-pembayaran" class="app-view min-h-screen justify-between p-6 items-center justify-center">
+    <div class="max-w-xl w-full bg-white p-8 rounded-3xl border shadow-sm space-y-6 text-center">
+      <h2 class="text-2xl font-serif font-extrabold text-brandBrown">Pembayaran</h2>
+      <p class="text-xs">Metode: <b id="pay-method">-</b></p>
+      <div class="p-4 bg-amber-50 rounded-2xl"><span class="text-xs block font-bold">Total:</span><span id="pay-total" class="text-2xl font-bold">Rp 0</span></div>
+      <div id="pay-instructions" class="text-xs bg-gray-50 p-4 rounded-2xl"></div>
+      <form onsubmit="handlePaymentUpload(event)" class="space-y-4 text-xs text-left">
+        <label class="font-bold block">Upload Bukti</label>
+        <input type="file" id="pay-file" required accept="image/*" class="w-full p-2 border rounded-xl">
+        <button type="submit" class="w-full py-3 bg-butterGold font-bold rounded-xl shadow cursor-pointer">Kirim Bukti 📤</button>
+      </form>
+    </div>
   </div>
 
   <!-- 9. VIEW: NOTA -->
-  <div id="view-nota" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 bg-white border-b flex justify-between items-center no-print"><h1 class="font-serif font-bold text-brandBrown">Nota Pesanan</h1><button onclick="navigate('dashboard-pelanggan')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold">← Dashboard</button></header>
-    <main id="nota-content" class="flex-grow max-w-3xl w-full mx-auto px-4 py-10 space-y-6"></main>
+  <div id="view-nota" class="app-view min-h-screen justify-between">
+    <header class="w-full py-5 px-6 bg-white border-b flex justify-between items-center"><h1 class="font-serif font-bold">Nota</h1><button onclick="navigate('dashboard-pelanggan')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold cursor-pointer">Dashboard</button></header>
+    <main id="nota-content" class="max-w-3xl w-full mx-auto px-4 py-10"></main>
   </div>
 
   <!-- 10. VIEW: DASHBOARD PELANGGAN -->
-  <div id="view-dashboard-pelanggan" class="view-block min-h-screen p-6 space-y-8">
-    <div class="max-w-6xl mx-auto space-y-8">
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border flex justify-between items-center">
-        <div><h1 class="text-2xl font-serif font-extrabold text-brandBrown">Halo, <span id="dash-pel-nama">Pelanggan</span>! 👋</h1></div>
-        <div class="flex gap-3"><button onclick="navigate('produk')" class="px-5 py-2.5 bg-butterGold font-bold rounded-full text-xs">Belanja Lagi</button><button onclick="logout()" class="px-5 py-2.5 bg-red-100 text-red-700 font-bold rounded-full text-xs">Keluar</button></div>
-      </div>
-      <div id="dash-pel-notif" class="hidden p-3 rounded-2xl text-xs font-bold text-center"></div>
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border space-y-6">
-        <h3 class="font-bold text-base text-brandBrown border-b pb-3">📦 Riwayat Pesanan Saya</h3>
-        <table class="w-full text-left text-xs">
-          <thead class="bg-amber-50 uppercase text-brandSub"><tr><th class="p-3">ID</th><th class="p-3">Metode</th><th class="p-3">Waktu</th><th class="p-3 text-right">Subtotal</th><th class="p-3 text-center">Status</th><th class="p-3 text-center">Aksi</th></tr></thead>
-          <tbody id="dash-pel-tbody" class="divide-y"></tbody>
-        </table>
-      </div>
-    </div>
-    <!-- Modal Ulasan -->
-    <div id="modalUlasan" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-      <div class="bg-white p-8 rounded-3xl max-w-md w-full space-y-4 shadow-xl">
-        <h3 class="font-bold text-sm text-brandBrown">⭐ Beri Rating & Saran</h3>
-        <form onsubmit="handleKirimUlasan(event)" class="space-y-4 text-xs font-semibold">
-          <input type="hidden" id="modal_id_transaksi">
-          <select id="modal_bintang" class="w-full p-3 border rounded-xl"><option value="5">⭐⭐⭐⭐⭐ (Sangat Puas)</option><option value="4">⭐⭐⭐⭐ (Puas)</option><option value="3">⭐⭐⭐ (Cukup)</option></select>
-          <textarea id="modal_saran" rows="3" placeholder="Ulasan kualitas plafon..." class="w-full p-3 border rounded-xl" required></textarea>
-          <div class="flex gap-2"><button type="button" onclick="tutupModalUlasan()" class="w-1/2 py-3 bg-gray-100 rounded-xl">Batal</button><button type="submit" class="w-1/2 py-3 bg-butterGold rounded-xl font-bold">Kirim</button></div>
-        </form>
-      </div>
+  <div id="view-dashboard-pelanggan" class="app-view min-h-screen p-6 space-y-8">
+    <div class="max-w-6xl mx-auto space-y-8 bg-white p-8 rounded-3xl border shadow-sm">
+      <div class="flex justify-between items-center"><h1 class="text-2xl font-bold">Halo, <span id="dash-pel-nama">Pelanggan</span>!</h1><button onclick="logout()" class="px-4 py-2 bg-red-100 text-red-700 font-bold rounded-xl text-xs cursor-pointer">Keluar</button></div>
+      <table class="w-full text-left text-xs"><thead class="bg-amber-50 uppercase"><tr><th class="p-3">ID</th><th class="p-3">Metode</th><th class="p-3">Total</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr></thead><tbody id="dash-pel-tbody" class="divide-y"></tbody></table>
     </div>
   </div>
 
   <!-- 11. VIEW: DASHBOARD KASIR -->
-  <div id="view-dashboard-kasir" class="view-block min-h-screen p-6 space-y-8">
-    <div class="max-w-7xl mx-auto space-y-8">
-      <div class="bg-white p-6 rounded-3xl shadow-sm border flex justify-between items-center"><h1 class="text-xl font-bold font-serif text-brandBrown">🖥️ DASHBOARD KASIR</h1><button onclick="logout()" class="px-4 py-2 bg-red-100 text-red-700 rounded-xl text-xs font-bold">Keluar</button></div>
-      <div class="bg-white p-6 rounded-3xl shadow-sm border space-y-4">
-        <h3 class="font-bold text-base text-brandBrown border-b pb-3">📦 Verifikasi Pesanan Pembeli</h3>
-        <table class="w-full text-left text-xs">
-          <thead class="bg-amber-50 uppercase text-brandSub"><tr><th class="p-3">ID</th><th class="p-3">Pembeli</th><th class="p-3">Tagihan</th><th class="p-3">Metode</th><th class="p-3 text-center">Bukti</th><th class="p-3">Status</th><th class="p-3 text-center">Aksi</th></tr></thead>
-          <tbody id="kasir-trx-tbody" class="divide-y"></tbody>
-        </table>
-      </div>
+  <div id="view-dashboard-kasir" class="app-view min-h-screen p-6 space-y-8">
+    <div class="max-w-7xl mx-auto space-y-8 bg-white p-6 rounded-3xl border shadow-sm">
+      <div class="flex justify-between items-center"><h1 class="text-xl font-bold">Dashboard Kasir</h1><button onclick="logout()" class="px-4 py-2 bg-red-100 text-red-700 rounded-xl text-xs cursor-pointer">Keluar</button></div>
+      <table class="w-full text-left text-xs"><thead class="bg-amber-50 uppercase"><tr><th class="p-3">ID</th><th class="p-3">Pembeli</th><th class="p-3">Total</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr></thead><tbody id="kasir-trx-tbody" class="divide-y"></tbody></table>
     </div>
   </div>
 
   <!-- 12. VIEW: DASHBOARD ADMIN -->
-  <div id="view-dashboard-admin" class="view-block min-h-screen p-6 space-y-8">
-    <div class="max-w-7xl mx-auto space-y-8">
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border flex justify-between items-center">
-        <div><h1 class="text-2xl font-serif font-extrabold text-brandBrown">DASHBOARD ADMIN PLAFINUT</h1></div>
-        <button onclick="logout()" class="px-5 py-2.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">Keluar</button>
+  <div id="view-dashboard-admin" class="app-view min-h-screen p-6 space-y-8">
+    <div class="max-w-7xl mx-auto space-y-8 bg-white p-8 rounded-3xl border shadow-sm">
+      <div class="flex justify-between items-center"><h1 class="text-2xl font-bold">Dashboard Admin</h1><button onclick="logout()" class="px-5 py-2 bg-red-100 text-red-700 font-bold rounded-xl text-xs cursor-pointer">Keluar</button></div>
+      <div class="grid grid-cols-4 gap-4 text-xs font-bold">
+        <div class="p-4 bg-amber-50 rounded-2xl">Omset: <span id="stat-omset">Rp 0</span></div>
+        <div class="p-4 bg-amber-50 rounded-2xl">Pelanggan: <span id="stat-pelanggan">0</span></div>
+        <div class="p-4 bg-amber-50 rounded-2xl">Produk: <span id="stat-produk">0</span></div>
+        <div class="p-4 bg-amber-50 rounded-2xl">Transaksi: <span id="stat-pesanan">0</span></div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-        <div class="bg-white p-6 rounded-3xl border shadow-sm"><span class="text-[11px] font-bold text-brandSub">Omset</span><h2 id="stat-omset" class="text-xl font-bold text-brandBrown">Rp 0</h2></div>
-        <div class="bg-white p-6 rounded-3xl border shadow-sm"><span class="text-[11px] font-bold text-brandSub">Pelanggan</span><h2 id="stat-pelanggan" class="text-xl font-bold">0</h2></div>
-        <div class="bg-white p-6 rounded-3xl border shadow-sm"><span class="text-[11px] font-bold text-brandSub">Produk</span><h2 id="stat-produk" class="text-xl font-bold">0</h2></div>
-        <div class="bg-white p-6 rounded-3xl border shadow-sm"><span class="text-[11px] font-bold text-brandSub">Pesanan</span><h2 id="stat-pesanan" class="text-xl font-bold">0</h2></div>
-        <div class="bg-white p-6 rounded-3xl border shadow-sm"><span class="text-[11px] font-bold text-brandSub">Ulasan</span><h2 id="stat-ulasan" class="text-xl font-bold">0</h2></div>
-      </div>
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border space-y-4">
-        <h3 class="font-bold text-sm text-brandBrown uppercase">📊 Grafik Pendapatan Penjualan</h3>
-        <div class="relative w-full h-80"><canvas id="grafikPendapatanDinamis"></canvas></div>
-      </div>
-      <div id="admin-submodule-content"></div>
     </div>
   </div>
 
-  <!-- JAVASCRIPT JEMBATAN DATABASE (API CONNECTOR) -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
     let GLOBAL_DB = { produk: [], pelanggan: [], transaksi: [], rating: [] };
     let session = JSON.parse(localStorage.getItem('plafinut_session') || '{}');
@@ -293,12 +236,8 @@
       try {
         const res = await fetch('api.php?action=get_data');
         const json = await res.json();
-        if (json.status === 'success') {
-          GLOBAL_DB = json;
-        }
-      } catch (err) {
-        console.error("Gagal terhubung ke database:", err);
-      }
+        if (json.status === 'success') GLOBAL_DB = json;
+      } catch (err) { console.error(err); }
     }
 
     function saveSession() { localStorage.setItem('plafinut_session', JSON.stringify(session)); }
@@ -306,7 +245,7 @@
 
     async function navigate(viewName, param) {
       await fetchDB();
-      document.querySelectorAll('.view-section, .view-block').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
       const target = document.getElementById('view-' + viewName);
       if (target) target.classList.add('active');
       window.scrollTo(0, 0);
@@ -325,30 +264,31 @@
     function logout() { session = {}; saveSession(); navigate('home'); }
 
     function switchAuthTab(tab) {
-      const loginForm = document.getElementById('form-login-pelanggan');
-      const regForm = document.getElementById('form-register-pelanggan');
-      if (tab === 'login') { loginForm.classList.remove('hidden'); regForm.classList.add('hidden'); }
-      else { loginForm.classList.add('hidden'); regForm.classList.remove('hidden'); }
+      const lForm = document.getElementById('form-login-pelanggan');
+      const rForm = document.getElementById('form-register-pelanggan');
+      const tL = document.getElementById('tab-login');
+      const tR = document.getElementById('tab-register');
+      if (tab === 'login') {
+        lForm.classList.remove('hidden'); rForm.classList.add('hidden');
+        tL.className = "flex-1 py-3 text-center font-bold text-xs bg-amber-400 rounded-2xl cursor-pointer";
+        tR.className = "flex-1 py-3 text-center font-bold text-xs rounded-2xl cursor-pointer";
+      } else {
+        lForm.classList.add('hidden'); rForm.classList.remove('hidden');
+        tR.className = "flex-1 py-3 text-center font-bold text-xs bg-amber-400 rounded-2xl cursor-pointer";
+        tL.className = "flex-1 py-3 text-center font-bold text-xs rounded-2xl cursor-pointer";
+      }
     }
 
     async function handlePelangganLogin(e) {
       e.preventDefault();
-      const username = document.getElementById('login-pel-user').value;
-      const password = document.getElementById('login-pel-pass').value;
       const res = await fetch('api.php?action=login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ username, password, type: 'pelanggan' })
+        body: JSON.stringify({ username: document.getElementById('login-pel-user').value, password: document.getElementById('login-pel-pass').value, type: 'pelanggan' })
       });
       const json = await res.json();
-      if (json.status === 'success') {
-        session.pelanggan = json.user;
-        session.cart = session.cart || {};
-        saveSession();
-        navigate('produk');
-      } else {
-        alert(json.message);
-      }
+      if (json.status === 'success') { session.pelanggan = json.user; session.cart = {}; saveSession(); navigate('produk'); }
+      else { alert(json.message); }
     }
 
     async function handlePelangganRegister(e) {
@@ -360,96 +300,58 @@
         username: document.getElementById('reg-pel-user').value,
         password: document.getElementById('reg-pel-pass').value
       };
-      const res = await fetch('api.php?action=register', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      });
+      const res = await fetch('api.php?action=register', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
       const json = await res.json();
-      if (json.status === 'success') {
-        alert("Registrasi berhasil! Silakan masuk.");
-        switchAuthTab('login');
-      } else {
-        alert(json.message);
-      }
+      if (json.status === 'success') { alert("Registrasi berhasil!"); switchAuthTab('login'); } else { alert(json.message); }
     }
 
     async function handleKasirLogin(e) {
       e.preventDefault();
-      const username = document.getElementById('kasir-user').value;
-      const password = document.getElementById('kasir-pass').value;
-      const res = await fetch('api.php?action=login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ username, password, type: 'kasir' })
-      });
+      const res = await fetch('api.php?action=login', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ username: document.getElementById('kasir-user').value, password: document.getElementById('kasir-pass').value, type: 'kasir' }) });
       const json = await res.json();
-      if (json.status === 'success') {
-        session.kasir = json.user;
-        saveSession();
-        navigate('dashboard-kasir');
-      } else {
-        alert(json.message);
-      }
+      if (json.status === 'success') { session.kasir = json.user; saveSession(); navigate('dashboard-kasir'); } else { alert(json.message); }
     }
 
     async function handleAdminLogin(e) {
       e.preventDefault();
-      const username = document.getElementById('admin-user').value;
-      const password = document.getElementById('admin-pass').value;
-      const res = await fetch('api.php?action=login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ username, password, type: 'admin' })
-      });
+      const res = await fetch('api.php?action=login', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ username: document.getElementById('admin-user').value, password: document.getElementById('admin-pass').value, type: 'admin' }) });
       const json = await res.json();
-      if (json.status === 'success') {
-        session.admin = json.user;
-        saveSession();
-        navigate('dashboard-admin');
-      } else {
-        alert(json.message);
-      }
+      if (json.status === 'success') { session.admin = json.user; saveSession(); navigate('dashboard-admin'); } else { alert(json.message); }
     }
 
     function renderProduk() {
       const nav = document.getElementById('produk-nav-actions');
       const cartCount = session.cart ? Object.values(session.cart).reduce((a, b) => a + b, 0) : 0;
-      if (session.pelanggan) {
-        nav.innerHTML = `
-          <button onclick="navigate('dashboard-pelanggan')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold">Pesanan Saya</button>
-          <button onclick="navigate('keranjang')" class="px-4 py-2 bg-butterGold rounded-full text-xs font-bold">Keranjang (${cartCount})</button>
-          <button onclick="logout()" class="px-3 py-2 bg-red-100 text-red-700 rounded-full text-xs font-bold">Keluar</button>
-        `;
-      } else {
-        nav.innerHTML = `<button onclick="navigate('login-pelanggan')" class="px-4 py-2 bg-butterGold rounded-full text-xs font-bold">Login / Daftar</button>`;
-      }
+      nav.innerHTML = session.pelanggan ? `
+        <button onclick="navigate('dashboard-pelanggan')" class="px-4 py-2 bg-amber-100 rounded-full text-xs font-bold cursor-pointer">Pesanan Saya</button>
+        <button onclick="navigate('keranjang')" class="px-4 py-2 bg-butterGold rounded-full text-xs font-bold cursor-pointer">Keranjang (${cartCount})</button>
+        <button onclick="logout()" class="px-3 py-2 bg-red-100 text-red-700 rounded-full text-xs font-bold cursor-pointer">Keluar</button>
+      ` : `<button onclick="navigate('login-pelanggan')" class="px-4 py-2 bg-butterGold rounded-full text-xs font-bold cursor-pointer">Login / Daftar</button>`;
 
-      const grid = document.getElementById('produk-grid');
-      grid.innerHTML = GLOBAL_DB.produk.map(row => `
+      document.getElementById('produk-grid').innerHTML = GLOBAL_DB.produk.map(row => `
         <div class="bg-white rounded-3xl overflow-hidden border shadow-sm flex flex-col justify-between">
           <img src="${row.gambar}" class="w-full h-52 object-cover" onerror="this.src='https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=500&q=80'">
           <div class="p-6 space-y-3">
             <h3 class="font-serif font-bold text-lg text-brandBrown">${row.nama_produk}</h3>
             <p class="text-xs text-gray-600">${row.deskripsi || ''}</p>
-            <p class="text-base font-serif font-extrabold text-brandBrown">${formatRp(row.harga)} <span class="text-xs font-normal">/ m²</span></p>
+            <p class="text-base font-serif font-extrabold text-brandBrown">${formatRp(row.harga)} / m²</p>
             <div class="flex items-center gap-2 pt-2">
               <input type="number" id="qty-prod-${row.id_produk}" value="1" min="1" max="${row.stok}" class="w-16 p-2 border rounded-xl text-xs font-bold text-center">
-              <button onclick="addToCart(${row.id_produk})" class="flex-grow py-3 bg-butterGold text-brandBrown font-bold rounded-xl text-xs shadow">🛒 Keranjang</button>
+              <button onclick="addToCart(${row.id_produk})" class="flex-grow py-3 bg-butterGold text-brandBrown font-bold rounded-xl text-xs shadow cursor-pointer">🛒 Keranjang</button>
             </div>
           </div>
         </div>
       `).join('');
     }
 
-    function addToCart(id_produk) {
+    function addToCart(id) {
       if (!session.pelanggan) { navigate('login-pelanggan'); return; }
-      const qty = parseInt(document.getElementById('qty-prod-' + id_produk).value || '1', 10);
+      const qty = parseInt(document.getElementById('qty-prod-' + id).value || '1', 10);
       session.cart = session.cart || {};
-      session.cart[id_produk] = (session.cart[id_produk] || 0) + qty;
+      session.cart[id] = (session.cart[id] || 0) + qty;
       saveSession();
       renderProduk();
-      alert("Produk berhasil dimasukkan ke keranjang!");
+      alert("Berhasil masuk keranjang!");
     }
 
     function renderKeranjang() {
@@ -458,29 +360,27 @@
       const entries = Object.entries(cart).filter(([_, q]) => q > 0);
       const container = document.getElementById('keranjang-content');
       if (entries.length === 0) {
-        container.innerHTML = `<div class="bg-white p-12 rounded-3xl text-center border"><p class="text-sm">Keranjang kosong.</p><button onclick="navigate('produk')" class="mt-4 px-6 py-3 bg-butterGold rounded-2xl text-xs font-bold">Katalog</button></div>`;
+        container.innerHTML = `<div class="bg-white p-12 rounded-3xl text-center border"><p class="text-sm">Keranjang kosong.</p><button onclick="navigate('produk')" class="mt-4 px-6 py-3 bg-butterGold rounded-2xl text-xs font-bold cursor-pointer">Katalog</button></div>`;
         return;
       }
       let total = 0;
-      let rows = entries.map(([idStr, qty]) => {
-        const p = GLOBAL_DB.produk.find(x => x.id_produk == idStr);
+      let rows = entries.map(([id, qty]) => {
+        const p = GLOBAL_DB.produk.find(x => x.id_produk == id);
         if(!p) return '';
-        let sub = p.harga * qty;
-        total += sub;
+        let sub = p.harga * qty; total += sub;
         return `<tr><td class="p-4">${p.nama_produk}</td><td class="p-4">${formatRp(p.harga)}</td><td class="p-4">${qty} m²</td><td class="p-4 text-right">${formatRp(sub)}</td></tr>`;
       }).join('');
-      container.innerHTML = `<div class="bg-white p-6 rounded-3xl border"><table class="w-full text-left text-xs">${rows}</table><div class="pt-4 border-t flex justify-between font-bold text-sm"><span>Total:</span><span>${formatRp(total)}</span></div><button onclick="navigate('checkout')" class="mt-4 w-full py-3 bg-butterGold rounded-2xl text-xs font-bold">Checkout ➔</button></div>`;
+      container.innerHTML = `<div class="bg-white p-6 rounded-3xl border"><table class="w-full text-left text-xs">${rows}</table><div class="pt-4 border-t flex justify-between font-bold text-sm"><span>Total:</span><span>${formatRp(total)}</span></div><button onclick="navigate('checkout')" class="mt-4 w-full py-3 bg-butterGold rounded-2xl text-xs font-bold cursor-pointer">Checkout ➔</button></div>`;
     }
 
     function renderCheckout() {
       if (!session.pelanggan) { navigate('login-pelanggan'); return; }
       document.getElementById('checkout-nama').value = session.pelanggan.nama_pelanggan;
       let total = 0;
-      let html = Object.entries(session.cart || {}).map(([idStr, qty]) => {
-        const p = GLOBAL_DB.produk.find(x => x.id_produk == idStr);
+      let html = Object.entries(session.cart || {}).map(([id, qty]) => {
+        const p = GLOBAL_DB.produk.find(x => x.id_produk == id);
         if(!p) return '';
-        let sub = p.harga * qty;
-        total += sub;
+        let sub = p.harga * qty; total += sub;
         return `<div class="flex justify-between"><span>${p.nama_produk} (${qty}x)</span><span>${formatRp(sub)}</span></div>`;
       }).join('');
       document.getElementById('checkout-summary-items').innerHTML = html;
@@ -494,7 +394,6 @@
       formData.append('nama_penerima', session.pelanggan.nama_pelanggan);
       formData.append('alamat_pengiriman', document.getElementById('checkout-alamat').value);
       formData.append('metode_pembayaran', document.querySelector('input[name="metode_pembayaran"]:checked').value);
-      formData.append('catatan', document.getElementById('checkout-catatan').value);
       
       let itemsArr = Object.entries(session.cart).map(([id, qty]) => {
         const p = GLOBAL_DB.produk.find(x => x.id_produk == id);
@@ -505,9 +404,7 @@
       const res = await fetch('api.php?action=checkout', { method: 'POST', body: formData });
       const json = await res.json();
       if(json.status === 'success') {
-        session.cart = {};
-        session.activeTrxId = json.id_transaksi;
-        saveSession();
+        session.cart = {}; session.activeTrxId = json.id_transaksi; saveSession();
         navigate(document.querySelector('input[name="metode_pembayaran"]:checked').value === 'COD' ? 'nota' : 'pembayaran', json.id_transaksi);
       }
     }
@@ -523,16 +420,6 @@
 
     async function handlePaymentUpload(e) {
       e.preventDefault();
-      const file = document.getElementById('pay-file').files[0];
-      const formData = new FormData();
-      formData.append('id_pelanggan', session.pelanggan.id_pelanggan);
-      formData.append('nama_penerima', session.pelanggan.nama_pelanggan);
-      formData.append('alamat_pengiriman', 'Alamat Tersimpan');
-      formData.append('metode_pembayaran', 'QRISS');
-      formData.append('bukti_pembayaran', file);
-      formData.append('items', JSON.stringify([]));
-
-      // Kirim ulang atau update status pembayaran lewat API
       alert("Bukti terkirim!");
       navigate('nota', session.activeTrxId);
     }
@@ -545,7 +432,7 @@
           <h2 class="font-serif font-extrabold text-xl text-brandBrown">Nota Transaksi #${trx.id_transaksi}</h2>
           <p class="text-xs">Penerima: <b>${trx.nama_penerima}</b> | Status: <b>${trx.status_pesanan}</b></p>
           <div class="border-t pt-4 flex justify-between font-bold"><span>Total:</span><span>${formatRp(trx.subtotal)}</span></div>
-          <button onclick="window.print()" class="w-full py-3 bg-amber-100 rounded-xl text-xs font-bold">Cetak Nota</button>
+          <button onclick="window.print()" class="w-full py-3 bg-amber-100 rounded-xl text-xs font-bold cursor-pointer">Cetak Nota</button>
         </div>
       `;
     }
@@ -554,13 +441,13 @@
       document.getElementById('dash-pel-nama').textContent = session.pelanggan.nama_pelanggan;
       const myTrx = GLOBAL_DB.transaksi.filter(t => t.id_pelanggan == session.pelanggan.id_pelanggan);
       document.getElementById('dash-pel-tbody').innerHTML = myTrx.map(t => `
-        <tr><td class="p-3">#${t.id_transaksi}</td><td class="p-3">${t.metode_pembayaran}</td><td class="p-3">${formatRp(t.subtotal)}</td><td class="p-3">${t.status_pesanan}</td><td class="p-3"><button onclick="navigate('nota', ${t.id_transaksi})" class="px-3 py-1 bg-amber-100 rounded-lg">Nota</button></td></tr>
+        <tr><td class="p-3">#${t.id_transaksi}</td><td class="p-3">${t.metode_pembayaran}</td><td class="p-3">${formatRp(t.subtotal)}</td><td class="p-3">${t.status_pesanan}</td><td class="p-3"><button onclick="navigate('nota', ${t.id_transaksi})" class="px-3 py-1 bg-amber-100 rounded-lg cursor-pointer">Nota</button></td></tr>
       `).join('');
     }
 
     function renderDashboardKasir() {
       document.getElementById('kasir-trx-tbody').innerHTML = GLOBAL_DB.transaksi.map(t => `
-        <tr><td class="p-3">#${t.id_transaksi}</td><td class="p-3">${t.nama_penerima}</td><td class="p-3">${formatRp(t.subtotal)}</td><td class="p-3">${t.status_pesanan}</td><td class="p-3"><button onclick="updateTrxStatus(${t.id_transaksi}, 'Selesai')" class="px-2 py-1 bg-green-100 text-green-800 rounded">Selesai</button></td></tr>
+        <tr><td class="p-3">#${t.id_transaksi}</td><td class="p-3">${t.nama_penerima}</td><td class="p-3">${formatRp(t.subtotal)}</td><td class="p-3">${t.status_pesanan}</td><td class="p-3"><button onclick="updateTrxStatus(${t.id_transaksi}, 'Selesai')" class="px-2 py-1 bg-green-100 text-green-800 rounded cursor-pointer">Selesai</button></td></tr>
       `).join('');
     }
 
@@ -579,7 +466,6 @@
       document.getElementById('stat-pelanggan').textContent = GLOBAL_DB.pelanggan.length;
       document.getElementById('stat-produk').textContent = GLOBAL_DB.produk.length;
       document.getElementById('stat-pesanan').textContent = GLOBAL_DB.transaksi.length;
-      document.getElementById('stat-ulasan').textContent = GLOBAL_DB.rating.length;
     }
   </script>
 </body>
