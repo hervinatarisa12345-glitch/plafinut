@@ -5,9 +5,9 @@ header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
 $host = "localhost";
-$user = "root";       // Ganti jika di hosting online
-$pass = "";           // Ganti jika di hosting online
-$db   = "plofon_pvc"; // Nama database kamu
+$user = "root";       
+$pass = "";           
+$db   = "plofon_pvc"; 
 
 $koneksi = mysqli_connect($host, $user, $pass, $db);
 if (!$koneksi) {
@@ -17,19 +17,18 @@ if (!$koneksi) {
 
 $action = $_GET['action'] ?? '';
 
-// 1. LOGIN ADMIN / KASIR / PELANGGAN
 if ($action === 'login') {
     $data = json_decode(file_get_contents("php://input"), true);
     $username = mysqli_real_escape_string($koneksi, $data['username']);
     $password = $data['password'];
-    $role_type = $data['role_type']; // 'admin' atau 'pelanggan'
+    $type = $data['type']; 
 
-    if ($role_type === 'admin') {
-        $q = mysqli_query($koneksi, "SELECT * FROM t_admin WHERE username='$username'");
+    if ($type === 'admin' || $type === 'kasir') {
+        $role_target = ($type === 'admin') ? 'admin' : 'kasir';
+        $q = mysqli_query($koneksi, "SELECT * FROM t_admin WHERE username='$username' AND role='$role_target'");
         if ($row = mysqli_fetch_assoc($q)) {
-            // Cek password (mendukung teks biasa atau md5/hash)
             if ($password === $row['password']) {
-                echo json_encode(["status" => "success", "role" => $row['role'], "user" => $row]);
+                echo json_encode(["status" => "success", "user" => $row]);
                 exit;
             }
         }
@@ -37,7 +36,7 @@ if ($action === 'login') {
         $q = mysqli_query($koneksi, "SELECT * FROM t_pelanggan WHERE username='$username'");
         if ($row = mysqli_fetch_assoc($q)) {
             if ($password === $row['password']) {
-                echo json_encode(["status" => "success", "role" => "pelanggan", "user" => $row]);
+                echo json_encode(["status" => "success", "user" => $row]);
                 exit;
             }
         }
@@ -45,7 +44,6 @@ if ($action === 'login') {
     echo json_encode(["status" => "error", "message" => "Username atau password salah!"]);
 }
 
-// 2. REGISTER PELANGGAN BARU
 elseif ($action === 'register') {
     $data = json_decode(file_get_contents("php://input"), true);
     $nama = mysqli_real_escape_string($koneksi, $data['nama_pelanggan']);
@@ -56,49 +54,47 @@ elseif ($action === 'register') {
 
     $cek = mysqli_query($koneksi, "SELECT * FROM t_pelanggan WHERE username='$user' OR email='$email'");
     if (mysqli_num_rows($cek) > 0) {
-        echo json_encode(["status" => "error", "message" => "Username atau email sudah digunakan!"]);
+        echo json_encode(["status" => "error", "message" => "Username atau email sudah terdaftar!"]);
     } else {
         mysqli_query($koneksi, "INSERT INTO t_pelanggan (nama_pelanggan, no_telepon, email, username, password) VALUES ('$nama', '$telp', '$email', '$user', '$pass')");
         echo json_encode(["status" => "success"]);
     }
 }
 
-// 3. AMBIL DATA PRODUK (t_produk)
-elseif ($action === 'get_products') {
-    $q = mysqli_query($koneksi, "SELECT * FROM t_produk ORDER BY id_produk DESC");
-    $list = [];
-    while ($row = mysqli_fetch_assoc($q)) {
-        $list[] = $row;
-    }
-    echo json_encode($list);
-}
+elseif ($action === 'get_data') {
+    $produk = [];
+    $qProd = mysqli_query($koneksi, "SELECT * FROM t_produk ORDER BY id_produk DESC");
+    while($r = mysqli_fetch_assoc($qProd)) { $produk[] = $r; }
 
-// 4. TAMBAH PRODUK (Admin) + UPLOAD GAMBAR KE FOLDER uploads/
-elseif ($action === 'add_product') {
-    $nama = mysqli_real_escape_string($koneksi, $_POST['nama_produk']);
-    $harga = $_POST['harga'];
-    $stok = $_POST['stok'];
-    $deskripsi = mysqli_real_escape_string($koneksi, $_POST['deskripsi']);
-    $gambar = "default.jpg";
+    $pelanggan = [];
+    $qPel = mysqli_query($koneksi, "SELECT * FROM t_pelanggan ORDER BY id_pelanggan DESC");
+    while($r = mysqli_fetch_assoc($qPel)) { $pelanggan[] = $r; }
 
-    if (!empty($_FILES['gambar']['name'])) {
-        $ext = pathinfo($_FILES['gambar']['name'], PATHINFO_EXTENSION);
-        $gambar = "prod_" . time() . "." . $ext;
-        move_uploaded_file($_FILES['gambar']['tmp_name'], "uploads/" . $gambar);
+    $transaksi = [];
+    $qTrx = mysqli_query($koneksi, "SELECT * FROM t_transaksi ORDER BY id_transaksi DESC");
+    while($t = mysqli_fetch_assoc($qTrx)) {
+        $id_t = $t['id_transaksi'];
+        $items = [];
+        $qDet = mysqli_query($koneksi, "SELECT d.*, p.nama_produk, p.gambar FROM detail_transaksi d LEFT JOIN t_produk p ON d.id_produk = p.id_produk WHERE d.id_transaksi = $id_t");
+        while($d = mysqli_fetch_assoc($qDet)) { $items[] = $d; }
+        $t['items'] = $items;
+        $transaksi[] = $t;
     }
 
-    mysqli_query($koneksi, "INSERT INTO t_produk (nama_produk, harga, stok, deskripsi, gambar) VALUES ('$nama', '$harga', '$stok', '$deskripsi', '$gambar')");
-    echo json_encode(["status" => "success"]);
+    $rating = [];
+    $qRat = mysqli_query($koneksi, "SELECT * FROM t_rating ORDER BY id_rating DESC");
+    while($r = mysqli_fetch_assoc($qRat)) { $rating[] = $r; }
+
+    echo json_encode(["status" => "success", "produk" => $produk, "pelanggan" => $pelanggan, "transaksi" => $transaksi, "rating" => $rating]);
 }
 
-// 5. CHECKOUT & SIMPAN TRANSAKSI (`t_transaksi` & `detail_transaksi`)
 elseif ($action === 'checkout') {
     $id_pelanggan = (int)$_POST['id_pelanggan'];
     $nama_penerima = mysqli_real_escape_string($koneksi, $_POST['nama_penerima']);
     $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat_pengiriman']);
     $metode = mysqli_real_escape_string($koneksi, $_POST['metode_pembayaran']);
     $catatan = mysqli_real_escape_string($koneksi, $_POST['catatan'] ?? '');
-    $items = json_decode($_POST['items'], true); // Data keranjang
+    $items = json_decode($_POST['items'], true);
     $subtotal = 0;
 
     foreach ($items as $item) {
@@ -106,19 +102,15 @@ elseif ($action === 'checkout') {
     }
 
     $bukti = "-";
-    if ($metode === 'QRIS' && !empty($_FILES['bukti_pembayaran']['name'])) {
+    if (!empty($_FILES['bukti_pembayaran']['name'])) {
         $ext = pathinfo($_FILES['bukti_pembayaran']['name'], PATHINFO_EXTENSION);
-        $bukti = "qris_" . time() . "." . $ext;
-        move_uploaded_file($_FILES['bukti_pembayaran']['tmp_name'], "uploads/" . $bukti);
+        $bukti = "uploads/bukti_" . time() . "." . $ext;
+        move_uploaded_file($_FILES['bukti_pembayaran']['tmp_name'], $bukti);
     }
 
-    $status = ($metode === 'COD') ? 'Diproses (COD)' : 'Menunggu Verifikasi';
-
-    // Insert ke t_transaksi
-    mysqli_query($koneksi, "INSERT INTO t_transaksi (id_pelanggan, nama_penerima, subtotal, alamat_pengiriman, metode_pembayaran, catatan, status_pesanan, bukti_pembayaran) VALUES ('$id_pelanggan', '$nama_penerima', '$subtotal', '$alamat', '$metode', '$catatan', '$status', '$bukti')");
+    mysqli_query($koneksi, "INSERT INTO t_transaksi (id_pelanggan, nama_penerima, subtotal, alamat_pengiriman, metode_pembayaran, catatan, status_pesanan, bukti_pembayaran) VALUES ('$id_pelanggan', '$nama_penerima', '$subtotal', '$alamat', '$metode', '$catatan', 'Pending', '$bukti')");
     $id_transaksi = mysqli_insert_id($koneksi);
 
-    // Insert ke detail_transaksi & kurangi stok produk
     foreach ($items as $item) {
         $id_prod = $item['id_produk'];
         $jml = $item['jumlah'];
@@ -128,35 +120,25 @@ elseif ($action === 'checkout') {
         mysqli_query($koneksi, "UPDATE t_produk SET stok = stok - $jml WHERE id_produk = $id_prod");
     }
 
-    // Kosongkan keranjang pelanggan
-    mysqli_query($koneksi, "DELETE FROM t_keranjang WHERE id_pelanggan = '$id_pelanggan'");
-
     echo json_encode(["status" => "success", "id_transaksi" => $id_transaksi]);
 }
 
-// 6. AMBIL DAFTAR TRANSAKSI (Untuk Kasir & Admin)
-elseif ($action === 'get_transactions') {
-    $q = mysqli_query($koneksi, "SELECT t.*, p.nama_pelanggan FROM t_transaksi t LEFT JOIN t_pelanggan p ON t.id_pelanggan = p.id_pelanggan ORDER BY t.id_transaksi DESC");
-    $list = [];
-    while ($row = mysqli_fetch_assoc($q)) {
-        // Ambil detail produk dalam transaksi
-        $id_tr = $row['id_transaksi'];
-        $q_det = mysqli_query($koneksi, "SELECT d.*, pr.nama_produk FROM detail_transaksi d LEFT JOIN t_produk pr ON d.id_produk = pr.id_produk WHERE d.id_transaksi = $id_tr");
-        $details = [];
-        while ($d_row = mysqli_fetch_assoc($q_det)) {
-            $details[] = $d_row;
-        }
-        $row['details'] = $details;
-        $list[] = $row;
-    }
-    echo json_encode($list);
+elseif ($action === 'update_status_trx') {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $id = (int)$data['id_transaksi'];
+    $status = mysqli_real_escape_string($koneksi, $data['status_pesanan']);
+    mysqli_query($koneksi, "UPDATE t_transaksi SET status_pesanan='$status' WHERE id_transaksi=$id");
+    echo json_encode(["status" => "success"]);
 }
 
-// 7. VERIFIKASI PEMBAYARAN OLEH KASIR
-elseif ($action === 'verify_transaction') {
+elseif ($action === 'add_rating') {
     $data = json_decode(file_get_contents("php://input"), true);
-    $id_transaksi = $data['id_transaksi'];
-    mysqli_query($koneksi, "UPDATE t_transaksi SET status_pesanan = 'Lunas / Terverifikasi' WHERE id_transaksi = $id_transaksi");
+    $id_pelanggan = (int)$data['id_pelanggan'];
+    $id_transaksi = (int)$data['id_transaksi'];
+    $bintang = (int)$data['bintang'];
+    $saran = mysqli_real_escape_string($koneksi, $data['saran']);
+
+    mysqli_query($koneksi, "INSERT INTO t_rating (id_pelanggan, id_transaksi, bintang, saran) VALUES ('$id_pelanggan', '$id_transaksi', '$bintang', '$saran')");
     echo json_encode(["status" => "success"]);
 }
 ?>
