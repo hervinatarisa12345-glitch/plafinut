@@ -1,1511 +1,383 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PLAFINUT — Interior Plafon PVC</title>
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            serif: ['Playfair Display', 'serif'],
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          colors: {
-            butterBg: '#FFFDF2',
-            brandBrown: '#4A2311',
-            brandSub: '#7C4325',
-            butterGold: '#FFC82C',
-            butterGoldHover: '#E0AD1F',
-            cardBg: '#FFFFFF',
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    body {
-      background-color: #FFFDF2;
-      color: #4A2311;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .glass-card-aesthetic {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 200, 44, 0.3);
-      box-shadow: 0 20px 50px -15px rgba(124, 67, 37, 0.08);
-    }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 200, 44, 0.3);
-      box-shadow: 0 20px 50px -15px rgba(124, 67, 37, 0.08);
-    }
-    .aesthetic-shadow {
-      box-shadow: 0 10px 30px -5px rgba(255, 200, 44, 0.4);
-    }
-    .view-section { display: none; }
-    .view-section.active { display: flex; }
-    .view-block { display: none; }
-    .view-block.active { display: block; }
-    @media print {
-      body { background-color: white !important; }
-      .no-print { display: none !important; }
-      .print-shadow { box-shadow: none !important; border: none !important; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAFINUT - Interior Plafon PVC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+    </style>
 </head>
-<body class="bg-butterBg text-brandBrown font-sans min-h-screen selection:bg-yellow-200 relative overflow-x-hidden">
+<body class="bg-gray-100 text-gray-800 font-sans">
 
-  <!-- =========================================================
-       1. VIEW: BERANDA UTAMA (index.html)
-       ========================================================= -->
-  <div id="view-home" class="view-section active min-h-screen flex-col justify-between relative">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-b from-yellow-200/40 via-amber-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-
-    <nav class="w-full py-6 px-6 sm:px-14 relative z-10">
-      <div class="max-w-7xl mx-auto flex justify-end items-center gap-3 sm:gap-4">
-        <button onclick="navigate('login-admin')" class="px-5 py-2.5 rounded-full bg-white/80 border border-yellow-300/80 text-brandBrown font-bold text-xs sm:text-sm hover:bg-yellow-50 transition-all duration-300 shadow-sm flex items-center gap-2 backdrop-blur-md hover:scale-105 active:scale-95">
-          <span>🔒</span><span>Portal Admin</span>
-        </button>
-        <button onclick="navigate('login-kasir')" class="px-5 py-2.5 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs sm:text-sm transition-all duration-300 aesthetic-shadow flex items-center gap-2 hover:scale-105 active:scale-95">
-          <span>💻</span><span>Portal Kasir</span>
-        </button>
-      </div>
+    <!-- NAVBAR -->
+    <nav class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="showSection('home')">
+                <span class="font-bold text-xl tracking-wider text-amber-400">PLAFINUT</span>
+                <span class="text-xs bg-slate-700 px-2 py-0.5 rounded">Plafon PVC</span>
+            </div>
+            <div class="flex items-center space-x-4 text-sm">
+                <button onclick="showSection('home')" class="hover:text-amber-400 transition">Katalog</button>
+                <button id="nav-dash" onclick="goToDashboard()" class="hidden hover:text-amber-400 transition font-semibold text-amber-300">Dashboard</button>
+                <button id="nav-login" onclick="showSection('login')" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-1.5 rounded-lg transition">Login</button>
+                <button id="nav-logout" onclick="logout()" class="hidden bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-lg transition">Logout</button>
+            </div>
+        </div>
     </nav>
 
-    <main class="flex-grow flex items-center justify-center px-4 py-8 relative z-10">
-      <div class="max-w-xl w-full text-center space-y-7">
-        <div class="flex flex-col items-center justify-center space-y-4">
-          <div class="relative group">
-            <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-300 to-amber-400 opacity-60 blur transition duration-500 group-hover:opacity-100"></div>
-            <div class="relative w-28 h-28 rounded-full border-2 border-yellow-200/80 bg-white flex items-center justify-center shadow-lg overflow-hidden">
-              <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover" />
-            </div>
-          </div>
-          <div class="space-y-2 pt-2">
-            <div class="inline-block px-4 py-1 rounded-full bg-amber-100/60 border border-amber-200 text-brandSub font-semibold text-xs tracking-widest uppercase">
-              SOLUSI INTERIOR PLAFON PVC TERBAIK
-            </div>
-            <h1 class="font-serif text-5xl sm:text-7xl font-extrabold tracking-tight text-brandBrown leading-none">
-              PLAFINUT
-            </h1>
-          </div>
-        </div>
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-6xl mx-auto p-4 md:p-6">
 
-        <div class="glass-card-aesthetic rounded-3xl p-7 sm:p-9 space-y-6">
-          <p class="text-brandSub text-sm sm:text-base leading-relaxed font-normal">
-            Selamat datang di sistem manajemen interior <span class="font-bold text-brandBrown">PLAFINUT</span>. Temukan berbagai koleksi plafon PVC berkualitas tinggi, tahan air, dan anti rayap untuk hunian Anda.
-          </p>
-          <div class="pt-2">
-            <button onclick="navigate('login-pelanggan', 'login')" class="group relative inline-flex items-center justify-center w-full py-4 px-6 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-base transition-all duration-300 aesthetic-shadow hover:scale-[1.02] active:scale-95">
-              <span>Mulai Belanja Sekarang</span>
-              <span class="ml-2 group-hover:translate-x-1 transition-transform duration-200">→</span>
-            </button>
-            <p class="text-xs text-brandSub mt-4 font-medium">
-              Belum punya akun? <button onclick="navigate('login-pelanggan', 'register')" class="text-brandBrown font-bold underline hover:text-amber-900 transition-colors">Daftar Akun Baru</button>
-            </p>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm relative z-10">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <!-- =========================================================
-       2. VIEW: LOGIN & REGISTER PELANGGAN (login_pelanggan.php)
-       ========================================================= -->
-  <div id="view-login-pelanggan" class="view-section min-h-screen items-center justify-center p-6">
-    <div class="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl border border-yellow-200 space-y-6">
-      <div class="text-center space-y-2">
-        <div class="w-14 h-14 mx-auto rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50">
-          <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-        </div>
-        <h1 class="text-2xl font-bold font-serif text-[#4A2311]">PLAFINUT Pelanggan</h1>
-        <p class="text-xs text-[#7C4325]">Silakan masuk atau daftar akun untuk berbelanja</p>
-      </div>
-
-      <div id="pelanggan-auth-msg" class="hidden p-3 rounded-xl text-xs font-bold text-center"></div>
-
-      <div class="flex bg-amber-50 p-1.5 rounded-2xl border border-amber-200">
-        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-3 text-center font-bold text-xs bg-amber-400 text-amber-950 rounded-2xl shadow transition">
-          Masuk (Login)
-        </button>
-        <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-3 text-center font-bold text-xs bg-amber-50 text-amber-800 rounded-2xl hover:bg-amber-100 transition">
-          Daftar (Register)
-        </button>
-      </div>
-
-      <form id="form-login-pelanggan" onsubmit="handlePelangganLogin(event)" class="space-y-4">
-        <div class="space-y-1 text-xs font-semibold">
-          <label class="text-[#7C4325] uppercase">Username</label>
-          <input type="text" id="login-pel-user" required placeholder="Masukkan username Anda" class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <div class="space-y-1 text-xs font-semibold">
-          <label class="text-[#7C4325] uppercase">Password</label>
-          <input type="password" id="login-pel-pass" required placeholder="••••••••" class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <button type="submit" class="w-full py-3.5 bg-[#FFC82C] hover:bg-[#E0AD1F] text-[#4A2311] font-bold rounded-2xl shadow transition text-xs">
-          Masuk Sekarang 🚀
-        </button>
-      </form>
-
-      <form id="form-register-pelanggan" onsubmit="handlePelangganRegister(event)" class="space-y-3.5 hidden">
-        <div class="space-y-1 text-xs font-semibold">
-          <label class="text-[#7C4325] uppercase">Nama Lengkap</label>
-          <input type="text" id="reg-pel-nama" required placeholder="Contoh: Budi Santoso" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <div class="space-y-1 text-xs font-semibold">
-          <label class="text-[#7C4325] uppercase">No. Telepon / WhatsApp</label>
-          <input type="text" id="reg-pel-telp" placeholder="Contoh: 081234567890" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <div class="space-y-1 text-xs font-semibold">
-          <label class="text-[#7C4325] uppercase">Email</label>
-          <input type="email" id="reg-pel-email" placeholder="Contoh: budi@gmail.com" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <div class="space-y-1 text-xs font-semibold">
-          <label class="text-[#7C4325] uppercase">Username</label>
-          <input type="text" id="reg-pel-user" required placeholder="Buat username unik" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <div class="space-y-1 text-xs font-semibold">
-          <label class="text-[#7C4325] uppercase">Password</label>
-          <input type="password" id="reg-pel-pass" required placeholder="Buat password aman" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <button type="submit" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow transition text-xs">
-          Daftar Akun Baru ✨
-        </button>
-      </form>
-
-      <div class="text-center pt-2 border-t border-yellow-100">
-        <button onclick="navigate('home')" class="text-xs text-[#7C4325] hover:underline font-semibold">← Kembali ke Beranda Utama</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       3. VIEW: LOGIN KASIR (login_kasir.php)
-       ========================================================= -->
-  <div id="view-login-kasir" class="view-section min-h-screen items-center justify-center p-6">
-    <div class="max-w-md w-full bg-white p-8 rounded-3xl border border-yellow-200 shadow-sm space-y-6">
-      <div class="text-center space-y-2">
-        <div class="w-14 h-14 mx-auto rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50">
-          <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-        </div>
-        <h1 class="text-2xl font-serif font-extrabold text-brandBrown">Login Kasir</h1>
-        <p class="text-xs text-brandSub">Masuk untuk memantau transaksi & mengelola promo</p>
-      </div>
-      <div id="kasir-login-error" class="hidden p-3 bg-red-100 border border-red-200 text-red-700 rounded-2xl text-xs font-bold text-center"></div>
-      <form onsubmit="handleKasirLogin(event)" class="space-y-4 text-xs font-semibold">
-        <div class="space-y-1">
-          <label class="text-brandSub uppercase">Username Kasir</label>
-          <input type="text" id="kasir-user" required placeholder="Masukkan username kasir..." class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <div class="space-y-1">
-          <label class="text-brandSub uppercase">Password</label>
-          <input type="password" id="kasir-pass" required placeholder="••••••••" class="w-full p-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl focus:outline-none focus:border-yellow-400">
-        </div>
-        <button type="submit" class="w-full py-4 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-2xl shadow transition text-xs mt-2">
-          Masuk Dashboard Kasir ➔
-        </button>
-      </form>
-      <div class="text-center pt-2 border-t border-yellow-100 text-[11px]">
-        <button onclick="navigate('home')" class="text-brandSub hover:underline">← Kembali ke Beranda Utama</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       4. VIEW: LOGIN ADMIN (login_admin.php)
-       ========================================================= -->
-  <div id="view-login-admin" class="view-section min-h-screen flex-col justify-between relative">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-gradient-to-b from-yellow-200/40 via-amber-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-    <nav class="w-full py-6 px-6 sm:px-12 relative z-10">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <button onclick="navigate('home')" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-brandSub hover:text-brandBrown transition-colors">
-          <span>←</span> <span>Kembali ke Beranda</span>
-        </button>
-        <span class="font-serif font-bold text-brandBrown tracking-wide">PLAFINUT ADMIN</span>
-      </div>
-    </nav>
-    <main class="flex-grow flex items-center justify-center px-4 py-8 relative z-10">
-      <div class="max-w-md w-full glass-card rounded-3xl p-8 sm:p-10 space-y-6">
-        <div class="text-center space-y-2">
-          <div class="w-14 h-14 mx-auto rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-2xl shadow-inner">🔒</div>
-          <h1 class="font-serif text-3xl font-extrabold text-brandBrown">Login Admin</h1>
-          <p class="text-xs text-brandSub font-medium">Masukkan kredensial admin untuk mengakses panel pengelola.</p>
-        </div>
-        <div id="admin-login-error" class="hidden p-3 rounded-2xl bg-red-100 border border-red-200 text-red-700 text-xs font-semibold text-center"></div>
-        <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs font-semibold">
-          <div class="space-y-1.5">
-            <label class="block text-brandSub uppercase tracking-wider">Username Admin</label>
-            <input type="text" id="admin-user" required placeholder="Masukkan username admin" class="w-full bg-amber-50/50 border border-amber-200/80 text-brandBrown rounded-2xl p-3.5 text-sm font-medium focus:outline-none focus:border-butterGold transition-all" />
-          </div>
-          <div class="space-y-1.5">
-            <label class="block text-brandSub uppercase tracking-wider">Password</label>
-            <input type="password" id="admin-pass" required placeholder="••••••••" class="w-full bg-amber-50/50 border border-amber-200/80 text-brandBrown rounded-2xl p-3.5 text-sm font-medium focus:outline-none focus:border-butterGold transition-all" />
-          </div>
-          <div class="pt-2">
-            <button type="submit" class="w-full py-4 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-base transition-all duration-300 aesthetic-shadow hover:scale-[1.02] active:scale-95 shadow-md">
-              Masuk ke Panel Admin
-            </button>
-          </div>
-        </form>
-      </div>
-    </main>
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm relative z-10">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <!-- =========================================================
-       5. VIEW: KATALOG PRODUK (produk.php)
-       ========================================================= -->
-  <div id="view-produk" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 sm:px-12 bg-white/80 border-b border-yellow-200 backdrop-blur-md sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50">
-            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <h1 class="font-serif font-bold text-lg text-brandBrown leading-tight">PLAFINUT</h1>
-            <p class="text-[10px] text-brandSub tracking-wider uppercase font-semibold">Katalog Plafon PVC</p>
-          </div>
-        </div>
-        <div id="produk-nav-actions" class="flex items-center gap-3"></div>
-      </div>
-    </header>
-
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-10 space-y-8">
-      <div id="produk-notif" class="hidden p-4 rounded-2xl text-xs font-bold text-center shadow-sm"></div>
-      <div class="text-center space-y-3 max-w-2xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-serif font-extrabold text-brandBrown">Katalog Produk Pilihan</h2>
-        <p class="text-xs sm:text-sm text-brandSub">Pilih ragam desain plafon PVC berkualitas, tentukan ukuran (m²), dan masukkan ke keranjang.</p>
-      </div>
-      <div id="produk-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </main>
-
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm mt-12">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <!-- =========================================================
-       6. VIEW: KERANJANG BELANJA (keranjang.php)
-       ========================================================= -->
-  <div id="view-keranjang" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 sm:px-12 bg-white/80 border-b border-yellow-200 backdrop-blur-md sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50">
-            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <h1 class="font-serif font-bold text-lg text-brandBrown leading-tight">PLAFINUT</h1>
-            <p class="text-[10px] text-brandSub tracking-wider uppercase font-semibold">Keranjang Belanja</p>
-          </div>
-        </div>
-        <button onclick="navigate('produk')" class="px-4 py-2 rounded-full bg-amber-100 hover:bg-amber-200 text-brandBrown font-bold text-xs transition flex items-center gap-1.5 shadow-sm">
-          ← Kembali ke Produk
-        </button>
-      </div>
-    </header>
-
-    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-10 space-y-6">
-      <div class="flex justify-between items-center">
-        <h2 class="text-2xl font-serif font-extrabold text-brandBrown">Daftar Produk Pesanan</h2>
-      </div>
-      <div id="keranjang-content"></div>
-    </main>
-
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm mt-12">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <!-- =========================================================
-       7. VIEW: CHECKOUT (checkout.php)
-       ========================================================= -->
-  <div id="view-checkout" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 sm:px-12 bg-white/80 border-b border-yellow-200 backdrop-blur-md sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50">
-            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <h1 class="font-serif font-bold text-lg text-brandBrown leading-tight">PLAFINUT</h1>
-            <p class="text-[10px] text-brandSub tracking-wider uppercase font-semibold">Checkout Pesanan</p>
-          </div>
-        </div>
-        <button onclick="navigate('keranjang')" class="px-4 py-2 rounded-full bg-amber-100 hover:bg-amber-200 text-brandBrown font-bold text-xs transition shadow-sm">
-          ← Kembali ke Keranjang
-        </button>
-      </div>
-    </header>
-
-    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-10 space-y-6">
-      <h2 class="text-3xl font-serif font-extrabold text-brandBrown">Selesaikan Pesanan Anda</h2>
-      <form onsubmit="handleCheckout(event)" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-6">
-          <div class="bg-white p-6 sm:p-8 rounded-3xl border border-yellow-200 shadow-sm space-y-4">
-            <h3 class="font-serif font-bold text-lg text-brandBrown border-b pb-3">📍 Informasi Pengiriman</h3>
-            <div class="space-y-3 text-xs">
-              <div>
-                <label class="font-bold text-brandSub uppercase block mb-1">Nama Penerima (Sesuai Akun Login)</label>
-                <input type="text" id="checkout-nama" readonly class="w-full p-3 bg-gray-100 border border-amber-200 rounded-2xl font-bold text-brandBrown focus:outline-none cursor-not-allowed">
-                <span class="text-[10px] text-gray-500 mt-1 block">*Nama diambil otomatis dari akun yang sedang digunakan untuk masuk.</span>
-              </div>
-              <div>
-                <label class="font-bold text-brandSub uppercase block mb-1">Alamat Lengkap Pengiriman</label>
-                <textarea id="checkout-alamat" required rows="3" placeholder="Masukkan alamat lengkap penerima..." class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl font-medium focus:outline-none"></textarea>
-              </div>
-              <div>
-                <label class="font-bold text-brandSub uppercase block mb-1">Catatan Pesanan (Opsional)</label>
-                <textarea id="checkout-catatan" rows="2" placeholder="Catatan khusus..." class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-2xl font-medium focus:outline-none"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white p-6 sm:p-8 rounded-3xl border border-yellow-200 shadow-sm space-y-4">
-            <h3 class="font-serif font-bold text-lg text-brandBrown border-b pb-3">💳 Pilih Metode Pembayaran</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <label class="flex items-start gap-3 p-4 rounded-2xl border-2 border-amber-100 hover:border-butterGold cursor-pointer transition bg-amber-50/30">
-                <input type="radio" name="metode_pembayaran" value="Transfer Bank" required class="mt-0.5 accent-brandBrown">
-                <div class="space-y-1">
-                  <span class="font-bold text-brandBrown block text-sm">🏦 Transfer Bank</span>
-                  <span class="text-gray-500 block">BCA / Mandiri / BRI (Konfirmasi Kasir)</span>
+        <!-- 1. HALAMAN KATALOG -->
+        <section id="sec-home" class="page-section active">
+            <div class="bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-xl p-6 md:p-8 mb-8 shadow-lg flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2">Pusat Interior Plafon PVC Modern</h1>
+                    <p class="text-slate-300 text-sm md:text-base">Anti air, anti rayap, mewah, dan tahan lama.</p>
                 </div>
-              </label>
-              <label class="flex items-start gap-3 p-4 rounded-2xl border-2 border-amber-100 hover:border-butterGold cursor-pointer transition bg-amber-50/30">
-                <input type="radio" name="metode_pembayaran" value="QRISS" required class="mt-0.5 accent-brandBrown">
-                <div class="space-y-1">
-                  <span class="font-bold text-brandBrown block text-sm">📱 QRISS (E-Wallet / QR)</span>
-                  <span class="text-gray-500 block">Scan QR Code (Konfirmasi Kasir)</span>
-                </div>
-              </label>
-              <label class="flex items-start gap-3 p-4 rounded-2xl border-2 border-amber-100 hover:border-butterGold cursor-pointer transition bg-amber-50/30">
-                <input type="radio" name="metode_pembayaran" value="COD" required class="mt-0.5 accent-brandBrown">
-                <div class="space-y-1">
-                  <span class="font-bold text-brandBrown block text-sm">🤝 COD (Bayar di Tempat)</span>
-                  <span class="text-gray-500 block">Bayar tunai di lokasi (Konfirmasi Kasir)</span>
-                </div>
-              </label>
-              <label class="flex items-start gap-3 p-4 rounded-2xl border-2 border-amber-100 hover:border-butterGold cursor-pointer transition bg-amber-50/30">
-                <input type="radio" name="metode_pembayaran" value="Kredit" required class="mt-0.5 accent-brandBrown">
-                <div class="space-y-1">
-                  <span class="font-bold text-brandBrown block text-sm">🏷️ Cicilan / Kredit</span>
-                  <span class="text-gray-500 block">Fasilitas cicilan (Konfirmasi Kasir)</span>
-                </div>
-              </label>
+                <div id="user-greeting" class="text-right text-sm text-amber-300 font-semibold"></div>
             </div>
-          </div>
-        </div>
 
-        <div class="space-y-6">
-          <div class="bg-white p-6 rounded-3xl border border-yellow-200 shadow-sm space-y-4 sticky top-28">
-            <h3 class="font-serif font-bold text-lg text-brandBrown border-b pb-3">📦 Ringkasan Pesanan</h3>
-            <div id="checkout-summary-items" class="space-y-3 max-h-60 overflow-y-auto pr-1 divide-y divide-yellow-100 text-xs"></div>
-            <div class="border-t pt-4 space-y-2 text-xs">
-              <div class="flex justify-between text-gray-600">
-                <span>Subtotal Produk</span>
-                <span id="checkout-subtotal">Rp 0</span>
-              </div>
-              <div class="flex justify-between text-gray-600">
-                <span>Biaya Pengiriman</span>
-                <span class="text-green-600 font-bold">Gratis / Dihitung Nanti</span>
-              </div>
-              <div class="flex justify-between items-center pt-2 border-t">
-                <span class="font-bold text-brandSub uppercase">Total Pembayaran</span>
-                <span id="checkout-total" class="text-lg font-serif font-extrabold text-brandBrown">Rp 0</span>
-              </div>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-slate-800">Daftar Produk Plafon</h2>
             </div>
-            <button type="submit" class="w-full py-4 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-2xl text-xs transition shadow-sm text-center">
-              🔒 Buat Pesanan Sekarang
-            </button>
-          </div>
-        </div>
-      </form>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Data dimuat dari MySQL via JS -->
+            </div>
+        </section>
+
+        <!-- 2. HALAMAN LOGIN -->
+        <section id="sec-login" class="page-section">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md mt-8">
+                <h2 class="text-2xl font-bold text-center text-slate-800 mb-6">Login PLAFINUT</h2>
+                <div id="login-alert" class="hidden mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm"></div>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1">Masuk Sebagai</label>
+                        <select id="login-role" class="w-full px-3 py-2 border rounded-lg">
+                            <option value="pelanggan">Pelanggan</option>
+                            <option value="admin">Admin / Kasir</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1">Username</label>
+                        <input type="text" id="login-user" required class="w-full px-3 py-2 border rounded-lg">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold mb-1">Password</label>
+                        <input type="password" id="login-pass" required class="w-full px-3 py-2 border rounded-lg">
+                    </div>
+                    <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg transition mb-3">
+                        Masuk
+                    </button>
+                    <p class="text-center text-xs text-gray-500">Belum punya akun? <span onclick="showSection('register')" class="text-amber-600 cursor-pointer font-bold hover:underline">Daftar di sini</span></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. HALAMAN REGISTER PELANGGAN -->
+        <section id="sec-register" class="page-section">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md mt-8">
+                <h2 class="text-2xl font-bold text-center text-slate-800 mb-6">Daftar Pelanggan Baru</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-3"><label class="block text-xs font-bold mb-1">Nama Lengkap</label><input type="text" id="reg-nama" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                    <div class="mb-3"><label class="block text-xs font-bold mb-1">No Telepon</label><input type="text" id="reg-telp" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                    <div class="mb-3"><label class="block text-xs font-bold mb-1">Email</label><input type="email" id="reg-email" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                    <div class="mb-3"><label class="block text-xs font-bold mb-1">Username</label><input type="text" id="reg-user" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                    <div class="mb-4"><label class="block text-xs font-bold mb-1">Password</label><input type="password" id="reg-pass" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2.5 rounded-lg text-sm transition mb-3">Daftar</button>
+                    <p class="text-center text-xs text-gray-500">Sudah punya akun? <span onclick="showSection('login')" class="text-amber-600 cursor-pointer font-bold hover:underline">Login</span></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 4. HALAMAN CHECKOUT -->
+        <section id="sec-checkout" class="page-section">
+            <div class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow-md">
+                <button onclick="showSection('home')" class="text-sm text-amber-600 hover:underline mb-4 inline-block">&larr; Kembali</button>
+                <h2 class="text-xl font-bold mb-4">Form Checkout Pesanan</h2>
+                <form onsubmit="submitCheckout(event)">
+                    <div class="mb-3"><label class="block text-sm font-semibold mb-1">Nama Penerima</label><input type="text" id="co-penerima" required class="w-full px-3 py-2 border rounded-lg"></div>
+                    <div class="mb-3"><label class="block text-sm font-semibold mb-1">Alamat Pengiriman</label><textarea id="co-alamat" required class="w-full px-3 py-2 border rounded-lg"></textarea></div>
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold mb-1">Metode Pembayaran</label>
+                        <select id="co-metode" onchange="toggleQris()" class="w-full px-3 py-2 border rounded-lg">
+                            <option value="COD">COD (Bayar di Tempat)</option>
+                            <option value="QRIS">QRIS (Scan / Transfer)</option>
+                        </select>
+                    </div>
+                    <div id="qris-box" class="hidden mb-3 p-3 bg-gray-50 border rounded-lg">
+                        <label class="block text-xs font-bold mb-1">Upload Bukti QRIS (Masuk ke folder uploads/)</label>
+                        <input type="file" id="co-bukti" accept="image/*" class="w-full text-xs">
+                    </div>
+                    <div class="mb-4"><label class="block text-sm font-semibold mb-1">Catatan</label><input type="text" id="co-catatan" class="w-full px-3 py-2 border rounded-lg"></div>
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2.5 rounded-lg transition">Kirim Pesanan</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 5. DASHBOARD ADMIN / KASIR -->
+        <section id="sec-dashboard" class="page-section">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800" id="dash-title">Dashboard</h2>
+            </div>
+            
+            <!-- Panel Khusus Admin (Tambah Produk) -->
+            <div id="admin-panel" class="hidden mb-8 bg-white p-5 rounded-xl shadow-md">
+                <h3 class="font-bold text-lg mb-4 border-b pb-2">Tambah Produk Plafon Baru</h3>
+                <form onsubmit="addProduct(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <div><label class="block text-xs font-bold mb-1">Nama Produk</label><input type="text" id="prod-nama" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                        <div><label class="block text-xs font-bold mb-1">Harga (Rp)</label><input type="number" id="prod-harga" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                        <div><label class="block text-xs font-bold mb-1">Stok</label><input type="number" id="prod-stok" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+                        <div><label class="block text-xs font-bold mb-1">Gambar Produk</label><input type="file" id="prod-gambar" accept="image/*" class="w-full text-xs border p-1.5 rounded-lg"></div>
+                    </div>
+                    <div class="mb-3"><label class="block text-xs font-bold mb-1">Deskripsi</label><textarea id="prod-desc" class="w-full px-3 py-2 border rounded-lg text-sm"></textarea></div>
+                    <button type="submit" class="bg-slate-900 text-white text-sm font-bold px-4 py-2 rounded-lg">Simpan Produk</button>
+                </form>
+            </div>
+
+            <!-- Tabel Transaksi Masuk (Kasir / Admin) -->
+            <div class="bg-white p-5 rounded-xl shadow-md overflow-x-auto">
+                <h3 class="font-bold text-lg mb-4 border-b pb-2">Daftar Transaksi Pelanggan</h3>
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-3 border-b">ID</th>
+                            <th class="p-3 border-b">Pelanggan</th>
+                            <th class="p-3 border-b">Subtotal</th>
+                            <th class="p-3 border-b">Metode / Bukti</th>
+                            <th class="p-3 border-b">Status</th>
+                            <th class="p-3 border-b text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-table"></tbody>
+                </table>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm mt-12">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
+    <!-- SCRIPT JAVASCRIPT -->
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('plafinut_user')) || null;
+        let products = [];
+        let activeCheckoutProduct = null;
 
-  <!-- =========================================================
-       8. VIEW: PEMBAYARAN & UPLOAD BUKTI (pembayaran.php)
-       ========================================================= -->
-  <div id="view-pembayaran" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 sm:px-12 bg-white/80 border-b border-yellow-200 backdrop-blur-md sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50">
-            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <h1 class="font-serif font-bold text-lg text-brandBrown leading-tight">PLAFINUT</h1>
-            <p class="text-[10px] text-brandSub tracking-wider uppercase font-semibold">Konfirmasi Pembayaran</p>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="flex-grow max-w-xl w-full mx-auto px-4 py-12 space-y-6">
-      <div class="bg-white p-8 rounded-3xl border border-yellow-200 shadow-sm space-y-6">
-        <div class="text-center space-y-2">
-          <span class="text-3xl">💳</span>
-          <h2 class="text-2xl font-serif font-extrabold text-brandBrown">Selesaikan Pembayaran</h2>
-          <p class="text-xs text-brandSub">Metode: <b id="pay-method">-</b></p>
-        </div>
-
-        <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-xs text-center space-y-1">
-          <span class="text-gray-500 uppercase font-bold block">Total Tagihan:</span>
-          <span id="pay-total" class="text-2xl font-serif font-extrabold text-brandBrown">Rp 0</span>
-        </div>
-
-        <div id="pay-instructions" class="text-left text-xs space-y-2 bg-gray-50 p-4 rounded-2xl border"></div>
-
-        <form onsubmit="handlePaymentUpload(event)" class="space-y-4 text-xs">
-          <div class="space-y-1">
-            <label class="font-bold text-brandSub uppercase block">Unggah Foto Bukti Pembayaran / Nota</label>
-            <input type="file" id="pay-file" required accept="image/*" class="w-full p-2 bg-amber-50/50 border border-amber-200 rounded-xl">
-            <span class="text-[10px] text-gray-500 block">*Format gambar (JPG, PNG). Kasir akan memverifikasi foto ini.</span>
-          </div>
-          <button type="submit" class="w-full py-3.5 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-2xl text-xs transition shadow-sm">
-            📤 Kirim Bukti & Selesaikan Pesanan
-          </button>
-          <button type="button" onclick="navigate('produk')" class="block w-full text-center text-gray-500 underline hover:text-brandBrown">Kembali ke Katalog</button>
-        </form>
-      </div>
-    </main>
-
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm mt-12">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <!-- =========================================================
-       9. VIEW: PESANAN SUKSES & NOTA (pesanan_sukses.php / nota.php)
-       ========================================================= -->
-  <div id="view-nota" class="view-section min-h-screen flex-col justify-between">
-    <header class="w-full py-5 px-6 sm:px-12 bg-white/80 border-b border-yellow-200 backdrop-blur-md sticky top-0 z-50 no-print">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50">
-            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <h1 class="font-serif font-bold text-lg text-brandBrown leading-tight">PLAFINUT</h1>
-            <p class="text-[10px] text-brandSub tracking-wider uppercase font-semibold">Nota Pesanan</p>
-          </div>
-        </div>
-        <button onclick="navigate('dashboard-pelanggan')" class="px-4 py-2 rounded-full bg-amber-100 hover:bg-amber-200 text-brandBrown font-bold text-xs transition shadow-sm">
-          ← Kembali ke Dashboard
-        </button>
-      </div>
-    </header>
-
-    <main id="nota-content" class="flex-grow max-w-3xl w-full mx-auto px-4 py-10 space-y-6"></main>
-
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm mt-12 no-print">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <!-- =========================================================
-       10. VIEW: DASHBOARD PELANGGAN (dashboard_pelanggan.php)
-       ========================================================= -->
-  <div id="view-dashboard-pelanggan" class="view-block min-h-screen p-6 space-y-8">
-    <div class="max-w-6xl mx-auto space-y-8">
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yellow-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div class="flex items-center gap-5">
-          <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50 flex-shrink-0">
-            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-          </div>
-          <div class="space-y-1">
-            <span class="px-3 py-1 bg-amber-100 text-amber-900 font-bold rounded-lg text-[10px] tracking-wider uppercase">Dashboard Pelanggan</span>
-            <h1 class="text-2xl md:text-3xl font-serif font-extrabold text-brandBrown">Halo, <span id="dash-pel-nama">Pelanggan</span>! 👋</h1>
-            <p class="text-xs text-brandSub">Kelola pesanan belanja plafon PVC dan berikan ulasan toko di sini.</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <button onclick="navigate('produk')" class="px-5 py-2.5 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs transition shadow-sm">
-            🛒 Belanja Lagi
-          </button>
-          <button onclick="logout()" class="px-5 py-2.5 rounded-full bg-red-100 hover:bg-red-200 text-red-700 font-bold text-xs transition shadow-sm">
-            Keluar 🚪
-          </button>
-        </div>
-      </div>
-
-      <div id="dash-pel-notif" class="hidden p-3 rounded-2xl text-xs font-bold text-center"></div>
-
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yellow-200 space-y-6">
-        <div class="flex justify-between items-center border-b border-yellow-100 pb-4">
-          <h3 class="font-bold text-base text-brandBrown">📦 Riwayat Pesanan & Status Belanja Saya</h3>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-amber-50 border-b border-amber-200 uppercase text-brandSub">
-              <tr>
-                <th class="p-3">ID Trx</th>
-                <th class="p-3">Metode Bayar</th>
-                <th class="p-3">Waktu Pesan</th>
-                <th class="p-3 text-right">Subtotal</th>
-                <th class="p-3 text-center">Status Pesanan</th>
-                <th class="p-3 text-center">Aksi / Ulasan</th>
-              </tr>
-            </thead>
-            <tbody id="dash-pel-tbody" class="divide-y divide-amber-100 font-medium"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Ulasan -->
-    <div id="modalUlasan" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-      <div class="bg-white p-8 rounded-3xl max-w-md w-full space-y-4 shadow-xl border border-yellow-200">
-        <div class="flex justify-between items-center border-b border-yellow-100 pb-3">
-          <h3 class="font-bold text-sm text-brandBrown uppercase">⭐ Beri Rating & Saran Toko</h3>
-          <button onclick="tutupModalUlasan()" class="text-gray-400 hover:text-red-600 font-bold text-lg">✕</button>
-        </div>
-        <form onsubmit="handleKirimUlasan(event)" class="space-y-4 text-xs font-semibold">
-          <input type="hidden" id="modal_id_transaksi">
-          <div class="space-y-1">
-            <label class="text-brandSub uppercase">Pilih Rating Bintang</label>
-            <select id="modal_bintang" required class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-xl focus:outline-none font-bold">
-              <option value="5">⭐⭐⭐⭐⭐ (5/5 - Sangat Puas)</option>
-              <option value="4">⭐⭐⭐⭐ (4/5 - Puas)</option>
-              <option value="3">⭐⭐⭐ (3/5 - Cukup)</option>
-              <option value="2">⭐⭐ (2/5 - Kurang)</option>
-              <option value="1">⭐ (1/5 - Buruk)</option>
-            </select>
-          </div>
-          <div class="space-y-1">
-            <label class="text-brandSub uppercase">Komentar / Saran Konstruktif</label>
-            <textarea id="modal_saran" rows="3" required placeholder="Tuliskan ulasan kualitas plafon atau pelayanan toko..." class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-xl focus:outline-none"></textarea>
-          </div>
-          <div class="flex gap-2 pt-2">
-            <button type="button" onclick="tutupModalUlasan()" class="w-1/2 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">Batal</button>
-            <button type="submit" class="w-1/2 py-3 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-xl shadow transition">Kirim Ulasan</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       11. VIEW: DASHBOARD KASIR (dashboard_kasir.php)
-       ========================================================= -->
-  <div id="view-dashboard-kasir" class="view-block min-h-screen p-6 space-y-8">
-    <div class="max-w-7xl mx-auto space-y-8">
-      <div class="bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>
-          <h1 class="text-xl font-bold font-serif text-brandBrown">🖥️ DASHBOARD KASIR PLAFINUT</h1>
-          <p class="text-xs text-brandSub">Selamat datang, <b id="kasir-logged-name">Kasir</b> | Verifikasi Bukti Pembayaran & Konfirmasi Pesanan</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <button onclick="logout()" class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl text-xs font-bold transition">🚪 Keluar</button>
-        </div>
-      </div>
-
-      <div id="kasir-notif" class="hidden p-3 bg-green-100 border border-green-200 text-green-700 rounded-2xl text-xs font-bold text-center"></div>
-
-      <div class="bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 space-y-4">
-        <h3 class="font-bold text-base text-brandBrown border-b border-yellow-100 pb-3">📦 Verifikasi Bukti Pembayaran & Status Pesanan</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-amber-50 border-b border-amber-200 uppercase text-brandSub">
-              <tr>
-                <th class="p-3">ID Trx</th>
-                <th class="p-3">Nama Pembeli</th>
-                <th class="p-3">Tagihan</th>
-                <th class="p-3">Metode Bayar</th>
-                <th class="p-3 text-center">Bukti Bayar</th>
-                <th class="p-3">Status Saat Ini</th>
-                <th class="p-3 text-center">Aksi Konfirmasi Kasir (Bertahap)</th>
-              </tr>
-            </thead>
-            <tbody id="kasir-trx-tbody" class="divide-y divide-amber-100 font-medium"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 space-y-4">
-          <h3 class="font-bold text-base text-brandBrown border-b border-yellow-100 pb-3">👤 Data Pelanggan Terdaftar</h3>
-          <div class="overflow-x-auto max-h-60 overflow-y-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-amber-50 border-b border-amber-200 uppercase text-brandSub sticky top-0">
-                <tr><th class="p-2">Nama</th><th class="p-2">Telepon</th><th class="p-2">Username</th></tr>
-              </thead>
-              <tbody id="kasir-pel-tbody" class="divide-y divide-amber-100 font-medium"></tbody>
-            </table>
-          </div>
-        </div>
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 space-y-4">
-          <h3 class="font-bold text-base text-brandBrown border-b border-yellow-100 pb-3">🖼️ Data Produk Plafon PVC</h3>
-          <div class="overflow-x-auto max-h-60 overflow-y-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-amber-50 border-b border-amber-200 uppercase text-brandSub sticky top-0">
-                <tr><th class="p-2">Produk</th><th class="p-2">Harga / m²</th><th class="p-2">Stok</th></tr>
-              </thead>
-              <tbody id="kasir-prod-tbody" class="divide-y divide-amber-100 font-medium"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <footer class="py-6 text-center text-xs text-brandSub/70 border-t border-yellow-200/50 bg-white/30 backdrop-blur-sm mt-12">
-      <p>&copy; 2026 PLAFINUT Interior. All rights reserved.</p>
-    </footer>
-  </div>
-
-  <!-- =========================================================
-       12. VIEW: DASHBOARD ADMIN & SUB-MODUL (dashboard_admin.php)
-       ========================================================= -->
-  <div id="view-dashboard-admin" class="view-block min-h-screen p-6 space-y-8">
-    <div class="max-w-7xl mx-auto space-y-8">
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yellow-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div class="flex items-center gap-5">
-          <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-200 shadow flex items-center justify-center bg-amber-50 flex-shrink-0">
-            <img src="logo.jpeg" alt="Logo PLAFINUT" class="w-full h-full object-cover">
-          </div>
-          <div class="space-y-1">
-            <span class="px-3 py-1 bg-amber-100 text-amber-900 font-bold rounded-lg text-[10px] tracking-wider uppercase">Pusat Laporan & Kontrol Utama</span>
-            <h1 class="text-2xl md:text-3xl font-serif font-extrabold text-brandBrown">DASHBOARD ADMIN PLAFINUT</h1>
-            <p class="text-xs text-brandSub">Halo, <b>Administrator</b>! Kelola status pengiriman pesanan dan pantau aktivitas toko secara real-time.</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <button onclick="navigate('produk')" class="px-5 py-2.5 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs transition shadow-sm flex items-center gap-2">
-            🌐 Lihat Toko
-          </button>
-          <button onclick="logout()" class="px-5 py-2.5 rounded-full bg-red-100 hover:bg-red-200 text-red-700 font-bold text-xs transition shadow-sm">
-            Keluar 🚪
-          </button>
-        </div>
-      </div>
-
-      <!-- 5 Kartu Statistik -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white p-6 rounded-3xl border border-yellow-200 shadow-sm space-y-2">
-          <span class="text-[11px] font-bold text-brandSub uppercase tracking-wider block">Total Omset</span>
-          <h2 id="stat-omset" class="text-xl font-serif font-extrabold text-brandBrown">Rp 0</h2>
-        </div>
-        <div class="bg-white p-6 rounded-3xl border border-yellow-200 shadow-sm space-y-2">
-          <span class="text-[11px] font-bold text-brandSub uppercase tracking-wider block">Total Pelanggan</span>
-          <h2 id="stat-pelanggan" class="text-xl font-serif font-extrabold text-brandBrown">0 Akun</h2>
-        </div>
-        <div class="bg-white p-6 rounded-3xl border border-yellow-200 shadow-sm space-y-2">
-          <span class="text-[11px] font-bold text-brandSub uppercase tracking-wider block">Katalog Produk</span>
-          <h2 id="stat-produk" class="text-xl font-serif font-extrabold text-brandBrown">0 Jenis</h2>
-        </div>
-        <div class="bg-white p-6 rounded-3xl border border-yellow-200 shadow-sm space-y-2">
-          <span class="text-[11px] font-bold text-brandSub uppercase tracking-wider block">Total Pesanan</span>
-          <h2 id="stat-pesanan" class="text-xl font-serif font-extrabold text-brandBrown">0 Transaksi</h2>
-        </div>
-        <div class="bg-white p-6 rounded-3xl border border-yellow-200 shadow-sm space-y-2">
-          <span class="text-[11px] font-bold text-brandSub uppercase tracking-wider block">Ulasan Masuk</span>
-          <h2 id="stat-ulasan" class="text-xl font-serif font-extrabold text-brandBrown">0 Review</h2>
-        </div>
-      </div>
-
-      <!-- Grafik Chart.js -->
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yellow-200 space-y-4">
-        <div class="flex justify-between items-center border-b border-yellow-100 pb-4">
-          <div>
-            <h3 class="font-bold text-sm text-brandBrown uppercase">📊 Grafik Dinamis Pendapatan Penjualan Per Bulan</h3>
-            <p class="text-[11px] text-gray-500">Grafik bergerak interaktif berdasarkan data transaksi database</p>
-          </div>
-        </div>
-        <div class="relative w-full h-80">
-          <canvas id="grafikPendapatanDinamis"></canvas>
-        </div>
-      </div>
-
-      <!-- Akses Langsung Menu Modul -->
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yellow-200 space-y-6">
-        <h3 class="font-bold text-sm text-brandBrown uppercase tracking-wider">Akses Langsung Menu Modul</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <button onclick="switchAdminSubmodule('overview')" class="p-5 bg-amber-50/50 hover:bg-amber-100/60 border border-amber-200 rounded-2xl text-center space-y-2 transition group">
-            <div class="text-2xl group-hover:scale-110 transition">📊</div>
-            <span class="font-bold text-xs text-brandBrown block">Ringkasan Utama</span>
-          </button>
-          <button onclick="switchAdminSubmodule('pelanggan')" class="p-5 bg-amber-50/50 hover:bg-amber-100/60 border border-amber-200 rounded-2xl text-center space-y-2 transition group">
-            <div class="text-2xl group-hover:scale-110 transition">👥</div>
-            <span class="font-bold text-xs text-brandBrown block">Data Pelanggan</span>
-          </button>
-          <button onclick="switchAdminSubmodule('produk')" class="p-5 bg-amber-50/50 hover:bg-amber-100/60 border border-amber-200 rounded-2xl text-center space-y-2 transition group">
-            <div class="text-2xl group-hover:scale-110 transition">📦</div>
-            <span class="font-bold text-xs text-brandBrown block">Katalog Produk</span>
-          </button>
-          <button onclick="switchAdminSubmodule('ulasan')" class="p-5 bg-amber-50/50 hover:bg-amber-100/60 border border-amber-200 rounded-2xl text-center space-y-2 transition group">
-            <div class="text-2xl group-hover:scale-110 transition">⭐</div>
-            <span class="font-bold text-xs text-brandBrown block">Ulasan & Rating</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Submodul Container (Transaksi / Pelanggan / Produk / Ulasan) -->
-      <div id="admin-submodule-content"></div>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       JAVASCRIPT ENGINE (Database State, Routing & Logic)
-       ========================================================= -->
-  <script>
-    const INITIAL_DB = {
-      admins: [
-        { id_admin: 1, username: 'admin', password: '123', role: 'admin' },
-        { id_admin: 2, username: 'kasir', password: '123', role: 'kasir' }
-      ],
-      pelanggan: [
-        { id_pelanggan: 1, nama_pelanggan: 'Hervina Tarisa', no_telepon: '081234567890', email: 'hervina@example.com', username: 'hervina', password: '123' },
-        { id_pelanggan: 2, nama_pelanggan: 'Budi Santoso', no_telepon: '089876543210', email: 'budi@example.com', username: 'budi', password: '123' }
-      ],
-      produk: [
-        { id_produk: 1, nama_produk: 'Plafon PVC Premium Motif Kayu', harga: 85000, stok: 120, deskripsi: 'Plafon PVC anti rayap, tahan air, tampilan elegan motif serat kayu alami.', gambar: 'uploads/1794050390_plafon-pvc.jpg' },
-        { id_produk: 2, nama_produk: 'Plafon Kayu Natural Klasik', harga: 110000, stok: 85, deskripsi: 'Nuansa hangat kayu natural untuk ruang tamu dan ruang keluarga.', gambar: 'uploads/1794456035_plafon-kayu.webp' },
-        { id_produk: 3, nama_produk: 'Plafon Gypsum Minimalis Modern', harga: 75000, stok: 200, deskripsi: 'Finishing halus dan rapi untuk desain interior minimalis modern.', gambar: 'uploads/1794456075_plafon-gypsum.jpg' },
-        { id_produk: 4, nama_produk: 'Plafon GRC Tahan Lembab', harga: 90000, stok: 95, deskripsi: 'Kuat, tahan benturan, dan sangat cocok untuk area semi-outdoor.', gambar: 'uploads/1794456124_plafon-grc.png' },
-        { id_produk: 5, nama_produk: 'Plafon Metal Grid Industrial', harga: 125000, stok: 60, deskripsi: 'Desain metal modern untuk perkantoran, kafe, dan area komersial.', gambar: 'uploads/1794456164_plafon-metal.jpg' },
-        { id_produk: 6, nama_produk: 'Plafon Akustik Peredam Suara', harga: 135000, stok: 70, deskripsi: 'Meredam gema ruangan secara optimal untuk ruang rapat maupun studio.', gambar: 'uploads/1794458296_plafon-akustik.jpg' }
-      ],
-      transaksi: [
-        {
-          id_transaksi: 20, id_pelanggan: 1, nama_penerima: 'Hervina Tarisa', subtotal: 850000,
-          alamat_pengiriman: 'Jl. Merdeka No. 12, Jakarta', metode_pembayaran: 'QRISS',
-          catatan: 'Kirim pagi hari', status_pesanan: 'Selesai', tanggal_transaksi: '2026-11-10 10:15:00',
-          bukti_pembayaran: 'uploads/bukti_20_1794583967.png',
-          items: [{ id_produk: 1, nama_produk: 'Plafon PVC Premium Motif Kayu', harga_satuan: 85000, jumlah_m2: 10, subtotal: 850000, gambar: 'uploads/1794050390_plafon-pvc.jpg' }]
-        },
-        {
-          id_transaksi: 19, id_pelanggan: 2, nama_penerima: 'Budi Santoso', subtotal: 750000,
-          alamat_pengiriman: 'Jl. Sudirman No. 45, Bandung', metode_pembayaran: 'Transfer Bank',
-          catatan: '', status_pesanan: 'Pending', tanggal_transaksi: '2026-11-15 14:30:00',
-          bukti_pembayaran: 'uploads/bukti_19_1794583752.png',
-          items: [{ id_produk: 3, nama_produk: 'Plafon Gypsum Minimalis Modern', harga_satuan: 75000, jumlah_m2: 10, subtotal: 750000, gambar: 'uploads/1794456075_plafon-gypsum.jpg' }]
+        function showSection(id) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+            if(id === 'home') loadProducts();
+            if(id === 'dashboard') loadTransactions();
         }
-      ],
-      rating: [
-        { id_rating: 1, id_pelanggan: 1, id_transaksi: 20, bintang: 5, saran: 'Kualitas plafon PVC sangat bagus, pemasangan rapi dan pengiriman cepat!', tanggal_ulasan: '2026-11-12 09:00:00' }
-      ]
-    };
 
-    function getDB() {
-      const raw = localStorage.getItem('plafinut_db_v1');
-      if (!raw) {
-        localStorage.setItem('plafinut_db_v1', JSON.stringify(INITIAL_DB));
-        return JSON.parse(JSON.stringify(INITIAL_DB));
-      }
-      return JSON.parse(raw);
-    }
-    function saveDB(db) {
-      localStorage.setItem('plafinut_db_v1', JSON.stringify(db));
-    }
+        function updateNav() {
+            const dashBtn = document.getElementById('nav-dash');
+            const loginBtn = document.getElementById('nav-login');
+            const logoutBtn = document.getElementById('nav-logout');
+            const greeting = document.getElementById('user-greeting');
 
-    let session = JSON.parse(localStorage.getItem('plafinut_session') || '{}');
-    function saveSession() { localStorage.setItem('plafinut_session', JSON.stringify(session)); }
-    function formatRp(num) { return 'Rp ' + Number(num || 0).toLocaleString('id-ID'); }
-
-    function navigate(viewName, param) {
-      document.querySelectorAll('.view-section, .view-block').forEach(el => el.classList.remove('active'));
-      const target = document.getElementById('view-' + viewName);
-      if (target) target.classList.add('active');
-      window.scrollTo(0, 0);
-
-      if (viewName === 'login-pelanggan') switchAuthTab(param || 'login');
-      if (viewName === 'produk') renderProduk();
-      if (viewName === 'keranjang') renderKeranjang();
-      if (viewName === 'checkout') renderCheckout();
-      if (viewName === 'pembayaran') renderPembayaran(param);
-      if (viewName === 'nota') renderNota(param);
-      if (viewName === 'dashboard-pelanggan') renderDashboardPelanggan();
-      if (viewName === 'dashboard-kasir') renderDashboardKasir();
-      if (viewName === 'dashboard-admin') renderDashboardAdmin(param || 'overview');
-    }
-
-    function logout() {
-      session = {};
-      saveSession();
-      navigate('home');
-    }
-
-    // AUTH PELANGGAN
-    function switchAuthTab(tab) {
-      const loginForm = document.getElementById('form-login-pelanggan');
-      const regForm = document.getElementById('form-register-pelanggan');
-      const tabL = document.getElementById('tab-login');
-      const tabR = document.getElementById('tab-register');
-      if (tab === 'login') {
-        loginForm.classList.remove('hidden'); regForm.classList.add('hidden');
-        tabL.className = "flex-1 py-3 text-center font-bold text-xs bg-amber-400 text-amber-950 rounded-2xl shadow transition";
-        tabR.className = "flex-1 py-3 text-center font-bold text-xs bg-amber-50 text-amber-800 rounded-2xl hover:bg-amber-100 transition";
-      } else {
-        loginForm.classList.add('hidden'); regForm.classList.remove('hidden');
-        tabR.className = "flex-1 py-3 text-center font-bold text-xs bg-amber-400 text-amber-950 rounded-2xl shadow transition";
-        tabL.className = "flex-1 py-3 text-center font-bold text-xs bg-amber-50 text-amber-800 rounded-2xl hover:bg-amber-100 transition";
-      }
-    }
-
-    function showAuthMsg(msg, isSuccess) {
-      const el = document.getElementById('pelanggan-auth-msg');
-      el.textContent = msg;
-      el.className = isSuccess
-        ? 'p-3 bg-green-100 border border-green-200 text-green-700 rounded-xl text-xs font-bold text-center'
-        : 'p-3 bg-red-100 border border-red-200 text-red-700 rounded-xl text-xs font-bold text-center';
-      el.classList.remove('hidden');
-    }
-
-    function handlePelangganLogin(e) {
-      e.preventDefault();
-      const u = document.getElementById('login-pel-user').value.trim();
-      const p = document.getElementById('login-pel-pass').value.trim();
-      const db = getDB();
-      const user = db.pelanggan.find(x => x.username === u && x.password === p);
-      if (user) {
-        session.pelanggan = user;
-        session.cart = session.cart || {};
-        saveSession();
-        navigate('produk');
-      } else {
-        showAuthMsg('Username atau Password salah! (Coba: hervina / 123)', false);
-      }
-    }
-
-    function handlePelangganRegister(e) {
-      e.preventDefault();
-      const db = getDB();
-      const username = document.getElementById('reg-pel-user').value.trim();
-      if (db.pelanggan.some(x => x.username === username)) {
-        showAuthMsg('Username sudah digunakan, silakan pilih username lain.', false);
-        return;
-      }
-      const newPel = {
-        id_pelanggan: db.pelanggan.length ? Math.max(...db.pelanggan.map(x => x.id_pelanggan)) + 1 : 1,
-        nama_pelanggan: document.getElementById('reg-pel-nama').value.trim(),
-        no_telepon: document.getElementById('reg-pel-telp').value.trim(),
-        email: document.getElementById('reg-pel-email').value.trim(),
-        username,
-        password: document.getElementById('reg-pel-pass').value.trim()
-      };
-      db.pelanggan.push(newPel);
-      saveDB(db);
-      switchAuthTab('login');
-      showAuthMsg('Registrasi berhasil! Silakan masuk menggunakan akun Anda.', true);
-    }
-
-    // AUTH KASIR & ADMIN
-    function handleKasirLogin(e) {
-      e.preventDefault();
-      const u = document.getElementById('kasir-user').value.trim();
-      const p = document.getElementById('kasir-pass').value.trim();
-      const db = getDB();
-      const acc = db.admins.find(x => x.username === u && x.password === p);
-      if (acc) {
-        session.kasir = acc;
-        saveSession();
-        navigate('dashboard-kasir');
-      } else {
-        const err = document.getElementById('kasir-login-error');
-        err.textContent = 'Username atau password kasir salah! (Coba: kasir / 123)';
-        err.classList.remove('hidden');
-      }
-    }
-
-    function handleAdminLogin(e) {
-      e.preventDefault();
-      const u = document.getElementById('admin-user').value.trim();
-      const p = document.getElementById('admin-pass').value.trim();
-      const db = getDB();
-      const acc = db.admins.find(x => x.username === u && x.password === p && x.role === 'admin');
-      if (acc) {
-        session.admin = acc;
-        saveSession();
-        navigate('dashboard-admin');
-      } else {
-        const err = document.getElementById('admin-login-error');
-        err.textContent = 'Username, Password salah, atau Anda bukan Admin! (Coba: admin / 123)';
-        err.classList.remove('hidden');
-      }
-    }
-
-    // KATALOG PRODUK
-    function renderProduk() {
-      const db = getDB();
-      const nav = document.getElementById('produk-nav-actions');
-      const cartCount = session.cart ? Object.values(session.cart).reduce((a, b) => a + b, 0) : 0;
-
-      if (session.pelanggan) {
-        nav.innerHTML = `
-          <span class="text-xs font-semibold text-brandSub hidden sm:inline">Halo, <b>${session.pelanggan.nama_pelanggan}</b> 👋</span>
-          <button onclick="navigate('dashboard-pelanggan')" class="px-4 py-2 rounded-full bg-amber-100 hover:bg-amber-200 text-brandBrown font-bold text-xs transition">📦 Pesanan Saya</button>
-          <button onclick="navigate('keranjang')" class="px-4 py-2 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs transition-all shadow-sm flex items-center gap-1.5">🛒 Keranjang (${cartCount})</button>
-          <button onclick="logout()" class="px-4 py-2 rounded-full bg-red-100 hover:bg-red-200 text-red-700 font-bold text-xs transition-all">🚪 Keluar</button>
-        `;
-      } else {
-        nav.innerHTML = `<button onclick="navigate('login-pelanggan')" class="px-4 py-2 rounded-full bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold text-xs transition-all shadow-sm">🔑 Masuk / Daftar</button>`;
-      }
-
-      const grid = document.getElementById('produk-grid');
-      grid.innerHTML = db.produk.map(row => `
-        <div class="bg-white rounded-3xl overflow-hidden border border-yellow-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-          <div class="w-full h-52 bg-amber-50 overflow-hidden relative border-b border-yellow-100">
-            <img src="${row.gambar}" alt="${row.nama_produk}" class="w-full h-full object-cover">
-            <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-brandSub shadow-sm">Stok: ${row.stok} m²</div>
-          </div>
-          <div class="p-6 space-y-4 flex-grow flex flex-col justify-between">
-            <div class="space-y-1.5">
-              <h3 class="font-serif font-bold text-lg text-brandBrown leading-snug">${row.nama_produk}</h3>
-              <p class="text-xs text-gray-600 line-clamp-2">${row.deskripsi}</p>
-              <div class="pt-2">
-                <span class="text-[10px] uppercase font-bold text-brandSub block">Harga / m²</span>
-                <span class="text-base font-serif font-extrabold text-brandBrown">${formatRp(row.harga)}</span>
-              </div>
-            </div>
-            <div class="pt-3 border-t border-yellow-100 space-y-3">
-              <div class="flex items-center gap-2">
-                <label class="text-[11px] font-bold text-brandSub uppercase whitespace-nowrap">Jumlah (m²):</label>
-                <input type="number" id="qty-prod-${row.id_produk}" value="1" min="1" max="${row.stok}" class="w-full p-2 bg-amber-50/50 border border-amber-200 rounded-xl text-xs font-bold text-center focus:outline-none">
-              </div>
-              ${session.pelanggan
-                ? `<button onclick="addToCart(${row.id_produk})" class="w-full py-3 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-2xl text-xs transition shadow-sm">🛒 Masukkan Keranjang</button>`
-                : `<button onclick="navigate('login-pelanggan')" class="block w-full py-3 bg-amber-100 hover:bg-amber-200 text-brandBrown text-center font-bold rounded-2xl text-xs transition shadow-sm">🔑 Masuk untuk Membeli</button>`
-              }
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function addToCart(id_produk) {
-      if (!session.pelanggan) { navigate('login-pelanggan'); return; }
-      const db = getDB();
-      const prod = db.produk.find(p => p.id_produk === id_produk);
-      const qty = parseInt(document.getElementById('qty-prod-' + id_produk).value || '1', 10);
-      const notif = document.getElementById('produk-notif');
-      if (qty <= 0 || qty > prod.stok) {
-        notif.className = 'p-4 bg-red-100 border border-red-200 text-red-700 rounded-2xl text-xs font-bold text-center shadow-sm';
-        notif.textContent = `Stok produk tidak mencukupi! Sisa stok: ${prod.stok} m².`;
-        notif.classList.remove('hidden');
-        return;
-      }
-      session.cart = session.cart || {};
-      session.cart[id_produk] = (session.cart[id_produk] || 0) + qty;
-      saveSession();
-      renderProduk();
-      const updatedNotif = document.getElementById('produk-notif');
-      updatedNotif.className = 'p-4 bg-green-100 border border-green-200 text-green-700 rounded-2xl text-xs font-bold text-center shadow-sm flex items-center justify-center gap-2';
-      updatedNotif.innerHTML = `<span>✅</span><span>Berhasil menambahkan "${prod.nama_produk}" (${qty} m²) ke keranjang!</span><button onclick="navigate('keranjang')" class="ml-4 underline font-extrabold text-green-900">Lihat Keranjang →</button>`;
-      updatedNotif.classList.remove('hidden');
-    }
-
-    // KERANJANG
-    function renderKeranjang() {
-      if (!session.pelanggan) { navigate('login-pelanggan'); return; }
-      const db = getDB();
-      const cart = session.cart || {};
-      const entries = Object.entries(cart).filter(([_, qty]) => qty > 0);
-      const container = document.getElementById('keranjang-content');
-
-      if (entries.length === 0) {
-        container.innerHTML = `
-          <div class="bg-white p-12 rounded-3xl text-center border border-yellow-200 space-y-4 shadow-sm">
-            <span class="text-3xl">🛒</span>
-            <p class="text-sm font-semibold text-brandSub">Keranjang belanja Anda masih kosong.</p>
-            <div><button onclick="navigate('produk')" class="inline-block px-6 py-3 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-2xl text-xs transition shadow-sm">← Lihat Katalog Produk</button></div>
-          </div>`;
-        return;
-      }
-
-      let total = 0;
-      const rows = entries.map(([idStr, qty]) => {
-        const p = db.produk.find(x => x.id_produk === Number(idStr));
-        if (!p) return '';
-        const sub = p.harga * qty;
-        total += sub;
-        return `
-          <tr>
-            <td class="p-4 flex items-center gap-3">
-              <div class="w-12 h-12 rounded-xl overflow-hidden border bg-amber-50 flex-shrink-0"><img src="${p.gambar}" class="w-full h-full object-cover"></div>
-              <span class="font-bold text-brandBrown">${p.nama_produk}</span>
-            </td>
-            <td class="p-4 text-center text-gray-600">${formatRp(p.harga)}</td>
-            <td class="p-4 text-center font-bold text-brandBrown">${qty} m²</td>
-            <td class="p-4 text-right font-bold text-brandBrown">${formatRp(sub)}</td>
-            <td class="p-4 text-center"><button onclick="removeFromCart(${p.id_produk})" class="text-red-600 hover:text-red-800 font-bold underline">Hapus</button></td>
-          </tr>`;
-      }).join('');
-
-      container.innerHTML = `
-        <div class="bg-white rounded-3xl border border-yellow-200 overflow-hidden shadow-sm">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-amber-50/50 border-b border-yellow-200 text-xs uppercase text-brandSub">
-                <th class="p-4">Produk</th><th class="p-4 text-center">Harga / m²</th><th class="p-4 text-center">Jumlah (m²)</th><th class="p-4 text-right">Subtotal</th><th class="p-4 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody class="text-xs divide-y divide-yellow-100">${rows}</tbody>
-          </table>
-        </div>
-        <div class="bg-white p-6 rounded-3xl border border-yellow-200 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm mt-6">
-          <div>
-            <span class="text-xs text-brandSub block font-bold uppercase">Total Keseluruhan:</span>
-            <span class="text-2xl font-serif font-extrabold text-brandBrown">${formatRp(total)}</span>
-          </div>
-          <div class="flex items-center gap-3 w-full sm:w-auto">
-            <button onclick="navigate('produk')" class="px-5 py-3.5 bg-amber-100 hover:bg-amber-200 text-brandBrown font-bold rounded-2xl text-xs transition text-center shadow-sm">+ Tambah Produk Lain</button>
-            <button onclick="navigate('checkout')" class="flex-grow sm:flex-grow-0 px-8 py-3.5 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-2xl text-xs transition text-center shadow-sm">Proses Checkout Sekarang →</button>
-          </div>
-        </div>`;
-    }
-
-    function removeFromCart(id) {
-      delete session.cart[id];
-      saveSession();
-      renderKeranjang();
-    }
-
-    // CHECKOUT & PEMBAYARAN
-    function renderCheckout() {
-      if (!session.pelanggan) { navigate('login-pelanggan'); return; }
-      document.getElementById('checkout-nama').value = session.pelanggan.nama_pelanggan;
-      const db = getDB();
-      let total = 0;
-      const html = Object.entries(session.cart || {}).map(([idStr, qty]) => {
-        const p = db.produk.find(x => x.id_produk === Number(idStr));
-        if (!p) return '';
-        const sub = p.harga * qty;
-        total += sub;
-        return `<div class="pt-3 flex justify-between items-center gap-3"><div><span class="font-bold text-brandBrown block">${p.nama_produk}</span><span class="text-gray-500">${qty} m² × ${formatRp(p.harga)}</span></div><span class="font-bold text-brandBrown">${formatRp(sub)}</span></div>`;
-      }).join('');
-      document.getElementById('checkout-summary-items').innerHTML = html;
-      document.getElementById('checkout-subtotal').textContent = formatRp(total);
-      document.getElementById('checkout-total').textContent = formatRp(total);
-    }
-
-    function handleCheckout(e) {
-      e.preventDefault();
-      const db = getDB();
-      const metode = document.querySelector('input[name="metode_pembayaran"]:checked').value;
-      const alamat = document.getElementById('checkout-alamat').value.trim();
-      const catatan = document.getElementById('checkout-catatan').value.trim();
-
-      let subtotal = 0;
-      const items = [];
-      Object.entries(session.cart || {}).forEach(([idStr, qty]) => {
-        const p = db.produk.find(x => x.id_produk === Number(idStr));
-        if (p) {
-          const itemSub = p.harga * qty;
-          subtotal += itemSub;
-          p.stok = Math.max(0, p.stok - qty);
-          items.push({ id_produk: p.id_produk, nama_produk: p.nama_produk, harga_satuan: p.harga, jumlah_m2: qty, subtotal: itemSub, gambar: p.gambar });
+            if(currentUser) {
+                loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                dashBtn.classList.remove('hidden');
+                greeting.innerText = `Halo, ${currentUser.nama_pelanggan || currentUser.username}`;
+            } else {
+                loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                dashBtn.classList.add('hidden');
+                greeting.innerText = '';
+            }
         }
-      });
 
-      const newId = db.transaksi.length ? Math.max(...db.transaksi.map(x => x.id_transaksi)) + 1 : 1;
-      const trx = {
-        id_transaksi: newId,
-        id_pelanggan: session.pelanggan.id_pelanggan,
-        nama_penerima: session.pelanggan.nama_pelanggan,
-        subtotal,
-        alamat_pengiriman: alamat,
-        metode_pembayaran: metode,
-        catatan,
-        status_pesanan: 'Pending',
-        tanggal_transaksi: new Date().toISOString().slice(0, 19).replace('T', ' '),
-        bukti_pembayaran: '',
-        items
-      };
-      db.transaksi.unshift(trx);
-      saveDB(db);
-      session.cart = {};
-      session.activeTrxId = newId;
-      saveSession();
+        function goToDashboard() {
+            showSection('dashboard');
+            const adminPanel = document.getElementById('admin-panel');
+            if(currentUser && currentUser.role === 'admin') {
+                adminPanel.classList.remove('hidden');
+                document.getElementById('dash-title').innerText = "Dashboard Admin";
+            } else {
+                adminPanel.classList.add('hidden');
+                document.getElementById('dash-title').innerText = "Dashboard Kasir / Transaksi";
+            }
+        }
 
-      if (metode === 'COD') navigate('nota', newId);
-      else navigate('pembayaran', newId);
-    }
+        // Load Produk dari MySQL
+        async function loadProducts() {
+            const res = await fetch('api.php?action=get_products');
+            products = await res.json();
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
 
-    function renderPembayaran(idTrx) {
-      const db = getDB();
-      const trx = db.transaksi.find(x => x.id_transaksi === (idTrx || session.activeTrxId));
-      if (!trx) { navigate('produk'); return; }
-      session.activeTrxId = trx.id_transaksi;
-      document.getElementById('pay-method').textContent = trx.metode_pembayaran;
-      document.getElementById('pay-total').textContent = formatRp(trx.subtotal);
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden border">
+                        <img src="uploads/${p.gambar}" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=500&q=80'">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg text-slate-800">${p.nama_produk}</h3>
+                            <p class="text-amber-600 font-bold mb-2">Rp ${parseFloat(p.harga).toLocaleString('id-ID')}</p>
+                            <p class="text-xs text-gray-500 mb-3">${p.deskripsi || 'Plafon PVC berkualitas tinggi.'}</p>
+                            <button onclick="buyProduct(${p.id_produk})" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-900 text-white font-semibold py-2 rounded-lg text-sm transition">Pesan</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
 
-      const box = document.getElementById('pay-instructions');
-      if (trx.metode_pembayaran === 'Transfer Bank') {
-        box.innerHTML = `<p class="font-bold text-brandBrown">Silakan transfer ke rekening berikut:</p><p>• <b>BCA:</b> 1234-5678-90 a.n. PT PLAFINUT</p><p>• <b>Mandiri:</b> 0987-6543-21 a.n. PT PLAFINUT</p>`;
-      } else if (trx.metode_pembayaran === 'QRISS') {
-        box.innerHTML = `<p class="font-bold text-brandBrown text-center">Scan QR Code di bawah ini:</p><div class="flex justify-center py-2"><img src="qriss.jpeg" alt="QRIS PLAFINUT" class="w-48 rounded-xl border border-amber-300 shadow-sm"></div>`;
-      } else {
-        box.innerHTML = `<p class="font-bold text-brandBrown">Instruksi Pembayaran COD / Kredit:</p><p class="text-gray-600">Unggah foto konfirmasi atau catatan pesanan Anda di bawah ini.</p>`;
-      }
-    }
+        // Login Handler
+        async function handleLogin(e) {
+            e.preventDefault();
+            const role_type = document.getElementById('login-role').value;
+            const username = document.getElementById('login-user').value;
+            const password = document.getElementById('login-pass').value;
 
-    function handlePaymentUpload(e) {
-      e.preventDefault();
-      const fileInput = document.getElementById('pay-file');
-      const file = fileInput.files[0];
-      const db = getDB();
-      const trx = db.transaksi.find(x => x.id_transaksi === session.activeTrxId);
-      if (!trx || !file) return;
+            const res = await fetch('api.php?action=login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password, role_type})
+            });
+            const result = await res.json();
 
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        trx.bukti_pembayaran = evt.target.result;
-        trx.status_pesanan = 'Pending';
-        saveDB(db);
-        navigate('nota', trx.id_transaksi);
-      };
-      reader.readAsDataURL(file);
-    }
+            if(result.status === 'success') {
+                currentUser = result.user;
+                currentUser.role = result.role;
+                localStorage.setItem('plafinut_user', JSON.stringify(currentUser));
+                updateNav();
+                showSection('home');
+            } else {
+                const alertBox = document.getElementById('login-alert');
+                alertBox.innerText = result.message;
+                alertBox.classList.remove('hidden');
+            }
+        }
 
-    // NOTA PESANAN
-    function renderNota(idTrx) {
-      const db = getDB();
-      const trx = db.transaksi.find(x => x.id_transaksi === (idTrx || session.activeTrxId)) || db.transaksi[0];
-      const itemRows = (trx.items || []).map(item => `
-        <tr>
-          <td class="py-3 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl overflow-hidden border bg-amber-50 flex-shrink-0"><img src="${item.gambar || 'logo.jpeg'}" class="w-full h-full object-cover"></div>
-            <span class="font-bold text-brandBrown">${item.nama_produk}</span>
-          </td>
-          <td class="py-3 text-center text-gray-600">${formatRp(item.harga_satuan)}</td>
-          <td class="py-3 text-center font-bold text-brandBrown">${item.jumlah_m2} m²</td>
-          <td class="py-3 text-right font-bold text-brandBrown">${formatRp(item.subtotal)}</td>
-        </tr>`).join('');
+        // Register Handler
+        async function handleRegister(e) {
+            e.preventDefault();
+            const data = {
+                nama_pelanggan: document.getElementById('reg-nama').value,
+                no_telepon: document.getElementById('reg-telp').value,
+                email: document.getElementById('reg-email').value,
+                username: document.getElementById('reg-user').value,
+                password: document.getElementById('reg-pass').value
+            };
+            const res = await fetch('api.php?action=register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if(result.status === 'success') {
+                alert("Registrasi berhasil! Silakan login.");
+                showSection('login');
+            } else {
+                alert(result.message);
+            }
+        }
 
-      document.getElementById('nota-content').innerHTML = `
-        <div class="p-6 bg-green-100 border border-green-200 text-green-800 rounded-3xl text-center space-y-1 shadow-sm no-print">
-          <span class="text-2xl">🎉</span>
-          <h3 class="font-serif font-extrabold text-base">Pesanan Berhasil Dibuat!</h3>
-          <p class="text-xs">Terima kasih telah berbelanja di PLAFINUT Interior. Pesanan Anda sedang diproses.</p>
-        </div>
-        <div class="bg-white p-8 sm:p-10 rounded-3xl border border-yellow-200 shadow-sm print-shadow space-y-6">
-          <div class="flex justify-between items-start border-b pb-6">
-            <div>
-              <h2 class="font-serif font-extrabold text-xl text-brandBrown">NOTA PEMBELIAN</h2>
-              <p class="text-xs text-brandSub">PLAFINUT Interior Plafon PVC</p>
-            </div>
-            <div class="text-right text-xs">
-              <p class="font-bold text-brandBrown">No. Transaksi: #${trx.id_transaksi}</p>
-              <p class="text-gray-500">Tanggal: ${trx.tanggal_transaksi}</p>
-              <span class="inline-block mt-1 px-3 py-1 bg-amber-100 text-brandBrown rounded-full font-bold text-[10px]">Status: ${trx.status_pesanan}</span>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-amber-50/40 p-4 rounded-2xl border border-yellow-100">
-            <div><span class="font-bold text-brandSub uppercase block mb-1">Nama Penerima:</span><p class="font-bold text-brandBrown text-sm">${trx.nama_penerima}</p></div>
-            <div><span class="font-bold text-brandSub uppercase block mb-1">Metode Pembayaran:</span><p class="font-bold text-brandBrown text-sm">${trx.metode_pembayaran}</p></div>
-            <div class="sm:col-span-2"><span class="font-bold text-brandSub uppercase block mb-1">Alamat Pengiriman:</span><p class="font-medium text-brandBrown">${trx.alamat_pengiriman}</p></div>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead><tr class="border-b text-brandSub uppercase"><th class="py-3">Produk</th><th class="py-3 text-center">Harga / m²</th><th class="py-3 text-center">Jumlah</th><th class="py-3 text-right">Subtotal</th></tr></thead>
-              <tbody class="divide-y divide-yellow-100">${itemRows}</tbody>
-            </table>
-          </div>
-          <div class="border-t pt-4 flex justify-between items-center text-sm">
-            <span class="font-bold text-brandSub uppercase text-xs">Total Keseluruhan</span>
-            <span class="text-xl font-serif font-extrabold text-brandBrown">${formatRp(trx.subtotal)}</span>
-          </div>
-          <div class="pt-6 border-t flex flex-col sm:flex-row gap-3 no-print">
-            <button onclick="window.print()" class="w-full sm:w-1/2 py-3.5 bg-amber-100 hover:bg-amber-200 text-brandBrown font-bold rounded-2xl text-xs transition text-center shadow-sm">🖨️ Cetak Nota (PDF/Printer)</button>
-            <button onclick="navigate('dashboard-pelanggan')" class="w-full sm:w-1/2 py-3.5 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-2xl text-xs transition text-center shadow-sm">🏠 Kembali ke Dashboard</button>
-          </div>
-        </div>`;
-    }
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('plafinut_user');
+            updateNav();
+            showSection('home');
+        }
 
-    // DASHBOARD PELANGGAN
-    function renderDashboardPelanggan() {
-      if (!session.pelanggan) { navigate('login-pelanggan'); return; }
-      document.getElementById('dash-pel-nama').textContent = session.pelanggan.nama_pelanggan;
-      const db = getDB();
-      const myTrx = db.transaksi.filter(t => t.id_pelanggan === session.pelanggan.id_pelanggan);
-      const tbody = document.getElementById('dash-pel-tbody');
-      if (myTrx.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-brandSub italic">Anda belum memiliki riwayat transaksi belanja.</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = myTrx.map(t => {
-        let badge = 'bg-amber-100 text-amber-900';
-        if (t.status_pesanan === 'Selesai') badge = 'bg-green-100 text-green-800';
-        else if (t.status_pesanan === 'Dikirim') badge = 'bg-blue-100 text-blue-800';
-        return `
-          <tr class="hover:bg-amber-50/40">
-            <td class="p-3 font-bold text-amber-900">#${t.id_transaksi}</td>
-            <td class="p-3 text-gray-700">${t.metode_pembayaran}</td>
-            <td class="p-3 text-gray-500">${t.tanggal_transaksi}</td>
-            <td class="p-3 text-right font-extrabold text-brandBrown">${formatRp(t.subtotal)}</td>
-            <td class="p-3 text-center"><span class="px-3 py-1 rounded-lg font-bold ${badge}">${t.status_pesanan}</span></td>
-            <td class="p-3 text-center space-y-1">
-              <button onclick="navigate('nota', ${t.id_transaksi})" class="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-brandBrown font-bold rounded-xl inline-block transition">Lihat Nota 📄</button>
-              ${t.status_pesanan === 'Selesai' ? `<button onclick="bukaModalUlasan(${t.id_transaksi})" class="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold rounded-xl block mx-auto transition mt-1">Beri Ulasan ⭐</button>` : ''}
-            </td>
-          </tr>`;
-      }).join('');
-    }
+        function buyProduct(id) {
+            if(!currentUser) {
+                alert("Silakan login terlebih dahulu sebagai pelanggan.");
+                return showSection('login');
+            }
+            activeCheckoutProduct = products.find(p => p.id_produk == id);
+            showSection('checkout');
+        }
 
-    function bukaModalUlasan(idTrx) {
-      document.getElementById('modal_id_transaksi').value = idTrx;
-      document.getElementById('modalUlasan').classList.remove('hidden');
-      document.getElementById('modalUlasan').classList.add('flex');
-    }
-    function tutupModalUlasan() {
-      document.getElementById('modalUlasan').classList.add('hidden');
-      document.getElementById('modalUlasan').classList.remove('flex');
-    }
-    function handleKirimUlasan(e) {
-      e.preventDefault();
-      const db = getDB();
-      db.rating.unshift({
-        id_rating: db.rating.length ? Math.max(...db.rating.map(x => x.id_rating)) + 1 : 1,
-        id_pelanggan: session.pelanggan.id_pelanggan,
-        id_transaksi: Number(document.getElementById('modal_id_transaksi').value),
-        bintang: Number(document.getElementById('modal_bintang').value),
-        saran: document.getElementById('modal_saran').value.trim(),
-        tanggal_ulasan: new Date().toISOString().slice(0, 19).replace('T', ' ')
-      });
-      saveDB(db);
-      tutupModalUlasan();
-      const notif = document.getElementById('dash-pel-notif');
-      notif.className = 'p-3 bg-green-100 border border-green-200 text-green-700 rounded-2xl text-xs font-bold text-center';
-      notif.textContent = 'Ulasan dan saran berhasil dikirim. Terima kasih!';
-      notif.classList.remove('hidden');
-    }
+        function toggleQris() {
+            const metode = document.getElementById('co-metode').value;
+            document.getElementById('qris-box').classList.toggle('hidden', metode !== 'QRIS');
+        }
 
-    // DASHBOARD KASIR
-    function renderDashboardKasir() {
-      if (!session.kasir) { navigate('login-kasir'); return; }
-      document.getElementById('kasir-logged-name').textContent = session.kasir.username;
-      const db = getDB();
-      document.getElementById('kasir-trx-tbody').innerHTML = db.transaksi.map(t => {
-        const pel = db.pelanggan.find(p => p.id_pelanggan === t.id_pelanggan);
-        const st = t.status_pesanan;
-        let badge = 'bg-amber-100 text-amber-800';
-        if (st === 'Pembayaran Diterima') badge = 'bg-blue-100 text-blue-800';
-        else if (st === 'Diproses') badge = 'bg-purple-100 text-purple-800';
-        else if (st === 'Selesai') badge = 'bg-green-100 text-green-800';
-        return `
-          <tr class="hover:bg-amber-50/40">
-            <td class="p-3 font-bold text-amber-900">#${t.id_transaksi}</td>
-            <td class="p-3 font-bold text-brandBrown">${pel ? pel.nama_pelanggan : t.nama_penerima}</td>
-            <td class="p-3 font-extrabold text-brandBrown">${formatRp(t.subtotal)}</td>
-            <td class="p-3 text-gray-700">${t.metode_pembayaran}</td>
-            <td class="p-3 text-center">${t.bukti_pembayaran ? `<a href="${t.bukti_pembayaran}" target="_blank" class="inline-block"><img src="${t.bukti_pembayaran}" class="w-12 h-12 object-cover rounded-xl border border-amber-300 shadow-sm"><span class="text-[9px] text-brandSub underline block mt-0.5">Lihat Foto</span></a>` : '<span class="text-gray-400 italic text-[10px]">Belum upload</span>'}</td>
-            <td class="p-3"><span class="px-2.5 py-1 rounded-full font-bold ${badge}">${st}</span></td>
-            <td class="p-3 text-center space-x-1 whitespace-nowrap">
-              ${st === 'Pending' ? `<button onclick="kasirUpdateStatus(${t.id_transaksi}, 'Pembayaran Diterima')" class="px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold rounded-lg">Terima Bayar 💳</button>` : ''}
-              ${(st === 'Pending' || st === 'Pembayaran Diterima') ? `<button onclick="kasirUpdateStatus(${t.id_transaksi}, 'Diproses')" class="px-2 py-1 bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold rounded-lg">Proses 📦</button>` : ''}
-              ${st !== 'Selesai' ? `<button onclick="kasirUpdateStatus(${t.id_transaksi}, 'Selesai')" class="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-800 font-bold rounded-lg">Selesai ✅</button>` : '<span class="text-green-700 font-bold">Selesai</span>'}
-            </td>
-          </tr>`;
-      }).join('');
+        // Checkout Handler
+        async function submitCheckout(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('id_pelanggan', currentUser.id_pelanggan || 1);
+            formData.append('nama_penerima', document.getElementById('co-penerima').value);
+            formData.append('alamat_pengiriman', document.getElementById('co-alamat').value);
+            formData.append('metode_pembayaran', document.getElementById('co-metode').value);
+            formData.append('catatan', document.getElementById('co-catatan').value);
+            
+            const items = [{ id_produk: activeCheckoutProduct.id_produk, harga: activeCheckoutProduct.harga, jumlah: 1 }];
+            formData.append('items', JSON.stringify(items));
 
-      document.getElementById('kasir-pel-tbody').innerHTML = db.pelanggan.map(p => `<tr class="hover:bg-amber-50/40"><td class="p-2 font-bold text-brandBrown">${p.nama_pelanggan}</td><td class="p-2 text-gray-700">${p.no_telepon}</td><td class="p-2 font-semibold text-amber-800">${p.username}</td></tr>`).join('');
-      document.getElementById('kasir-prod-tbody').innerHTML = db.produk.map(p => `<tr class="hover:bg-amber-50/40"><td class="p-2 font-bold text-brandBrown">${p.nama_produk}</td><td class="p-2 font-extrabold text-brandBrown">${formatRp(p.harga)}</td><td class="p-2 font-bold text-amber-700">${p.stok} m²</td></tr>`).join('');
-    }
+            if(document.getElementById('co-metode').value === 'QRIS') {
+                formData.append('bukti_pembayaran', document.getElementById('co-bukti').files[0]);
+            }
 
-    function kasirUpdateStatus(idTrx, status) {
-      const db = getDB();
-      const trx = db.transaksi.find(x => x.id_transaksi === idTrx);
-      if (trx) { trx.status_pesanan = status; saveDB(db); }
-      renderDashboardKasir();
-      const n = document.getElementById('kasir-notif');
-      n.textContent = `Status transaksi #${idTrx} berhasil diperbarui menjadi: ${status}`;
-      n.classList.remove('hidden');
-    }
+            const res = await fetch('api.php?action=checkout', { method: 'POST', body: formData });
+            const result = await res.json();
+            if(result.status === 'success') {
+                alert("Pesanan berhasil dibuat!");
+                showSection('home');
+            }
+        }
 
-    // DASHBOARD ADMIN & SUBMODUL
-    let adminChart = null;
-    function renderDashboardAdmin(sub) {
-      if (!session.admin) { navigate('login-admin'); return; }
-      const db = getDB();
-      const omset = db.transaksi.reduce((s, t) => s + Number(t.subtotal || 0), 0);
-      document.getElementById('stat-omset').textContent = formatRp(omset);
-      document.getElementById('stat-pelanggan').textContent = db.pelanggan.length + ' Akun';
-      document.getElementById('stat-produk').textContent = db.produk.length + ' Jenis';
-      document.getElementById('stat-pesanan').textContent = db.transaksi.length + ' Transaksi';
-      document.getElementById('stat-ulasan').textContent = db.rating.length + ' Review';
+        // Load Transaksi untuk Dashboard
+        async function loadTransactions() {
+            const res = await fetch('api.php?action=get_transactions');
+            const data = await res.json();
+            const tbody = document.getElementById('transaction-table');
+            tbody.innerHTML = '';
 
-      const monthly = {};
-      db.transaksi.forEach(t => {
-        const m = (t.tanggal_transaksi || '2026-11').slice(0, 7);
-        monthly[m] = (monthly[m] || 0) + Number(t.subtotal || 0);
-      });
-      const labels = Object.keys(monthly).sort();
-      const values = labels.map(k => monthly[k]);
+            data.forEach(t => {
+                const isVerified = t.status_pesanan.includes('Lunas');
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-3 font-bold">#${t.id_transaksi}</td>
+                        <td class="p-3">${t.nama_pelanggan || 'Pelanggan'}</td>
+                        <td class="p-3 font-bold">Rp ${parseFloat(t.subtotal).toLocaleString('id-ID')}</td>
+                        <td class="p-3 text-xs"><b>${t.metode_pembayaran}</b><br>${t.bukti_pembayaran}</td>
+                        <td class="p-3"><span class="px-2 py-1 rounded text-xs font-bold ${isVerified ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${t.status_pesanan}</span></td>
+                        <td class="p-3 text-center">
+                            {!isVerified ? `<button onclick="verifyTr(${t.id_transaksi})" class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold">Verifikasi</button>` : 'Selesai'}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
 
-      const ctx = document.getElementById('grafikPendapatanDinamis').getContext('2d');
-      if (adminChart) adminChart.destroy();
-      adminChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels.length ? labels : ['2026-11'],
-          datasets: [{
-            label: 'Pendapatan Bulanan (Rp)',
-            data: values.length ? values : [0],
-            backgroundColor: 'rgba(255, 200, 44, 0.25)',
-            borderColor: '#E0AD1F',
-            borderWidth: 3,
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: '#4A2311',
-            pointRadius: 5
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
+        async function verifyTr(id_transaksi) {
+            await fetch('api.php?action=verify_transaction', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id_transaksi})
+            });
+            loadTransactions();
+        }
 
-      switchAdminSubmodule(sub || 'overview');
-    }
+        // Admin Tambah Produk
+        async function addProduct(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('nama_produk', document.getElementById('prod-nama').value);
+            formData.append('harga', document.getElementById('prod-harga').value);
+            formData.append('stok', document.getElementById('prod-stok').value);
+            formData.append('deskripsi', document.getElementById('prod-desc').value);
+            formData.append('gambar', document.getElementById('prod-gambar').files[0]);
 
-    function switchAdminSubmodule(sub) {
-      const db = getDB();
-      const box = document.getElementById('admin-submodule-content');
+            await fetch('api.php?action=add_product', { method: 'POST', body: formData });
+            alert("Produk berhasil ditambahkan ke database!");
+            e.target.reset();
+            loadProducts();
+        }
 
-      if (sub === 'pelanggan') {
-        box.innerHTML = `
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 space-y-4 h-fit">
-              <h3 class="font-bold text-sm text-brandBrown border-b border-yellow-100 pb-3 uppercase">➕ Tambah Pelanggan Baru</h3>
-              <form onsubmit="adminAddPelanggan(event)" class="space-y-3 text-xs font-semibold">
-                <input type="text" id="adm-pel-nama" required placeholder="Nama Lengkap" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-                <input type="text" id="adm-pel-telp" placeholder="No. Telepon" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-                <input type="email" id="adm-pel-email" placeholder="Email" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-                <input type="text" id="adm-pel-user" required placeholder="Username" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-                <input type="password" id="adm-pel-pass" required placeholder="Password" class="w-full p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-                <button type="submit" class="w-full py-3 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-xl shadow transition">Simpan Pelanggan 🚀</button>
-              </form>
-            </div>
-            <div class="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 space-y-4">
-              <h3 class="font-bold text-sm text-brandBrown uppercase border-b pb-3">👥 Daftar Akun Pelanggan Aktif</h3>
-              <table class="w-full text-left text-xs">
-                <thead class="bg-amber-50 uppercase text-brandSub"><tr><th class="p-3">ID</th><th class="p-3">Nama</th><th class="p-3">Kontak</th><th class="p-3">Username</th><th class="p-3 text-center">Aksi</th></tr></thead>
-                <tbody class="divide-y divide-amber-100">${db.pelanggan.map(p => `<tr><td class="p-3 font-bold">#${p.id_pelanggan}</td><td class="p-3 font-bold">${p.nama_pelanggan}</td><td class="p-3">${p.no_telepon} / ${p.email}</td><td class="p-3">${p.username}</td><td class="p-3 text-center"><button onclick="adminDelPelanggan(${p.id_pelanggan})" class="px-3 py-1 bg-red-100 text-red-700 font-bold rounded-lg">Hapus</button></td></tr>`).join('')}</tbody>
-              </table>
-            </div>
-          </div>`;
-      } else if (sub === 'produk') {
-        box.innerHTML = `
-          <div class="bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 space-y-4">
-            <h3 class="font-bold text-base text-brandBrown border-b pb-3">📦 Kelola Data Produk Plafon PVC</h3>
-            <form onsubmit="adminAddProduk(event)" class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs font-semibold">
-              <input type="text" id="adm-prod-nama" required placeholder="Nama Produk" class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-              <input type="number" id="adm-prod-harga" required placeholder="Harga / m²" class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-              <input type="number" id="adm-prod-stok" required placeholder="Stok (m²)" class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-              <button type="submit" class="py-3 bg-butterGold hover:bg-butterGoldHover text-brandBrown font-bold rounded-xl shadow">+ Tambah Produk</button>
-            </form>
-            <table class="w-full text-left text-xs mt-4">
-              <thead class="bg-amber-50 uppercase text-brandSub"><tr><th class="p-3">Foto</th><th class="p-3">Nama</th><th class="p-3">Harga</th><th class="p-3">Stok</th><th class="p-3 text-center">Aksi</th></tr></thead>
-              <tbody class="divide-y divide-amber-100">${db.produk.map(pr => `<tr><td class="p-3"><img src="${pr.gambar}" class="w-12 h-12 rounded-xl object-cover"></td><td class="p-3 font-bold">${pr.nama_produk}</td><td class="p-3 font-bold text-amber-800">${formatRp(pr.harga)}</td><td class="p-3">${pr.stok} m²</td><td class="p-3 text-center"><button onclick="adminDelProduk(${pr.id_produk})" class="px-3 py-1 bg-red-100 text-red-700 font-bold rounded-xl">Hapus</button></td></tr>`).join('')}</tbody>
-            </table>
-          </div>`;
-      } else if (sub === 'ulasan') {
-        box.innerHTML = `
-          <div class="bg-white p-6 rounded-3xl shadow-sm border border-yellow-200 space-y-4">
-            <h3 class="font-bold text-base text-brandBrown border-b pb-3">⭐ Rating & Saran Konsumen</h3>
-            <table class="w-full text-left text-xs">
-              <thead class="bg-amber-50 uppercase text-brandSub"><tr><th class="p-3">ID</th><th class="p-3">Pelanggan</th><th class="p-3">Rating</th><th class="p-3">Saran</th><th class="p-3">Tanggal</th><th class="p-3 text-center">Aksi</th></tr></thead>
-              <tbody class="divide-y divide-amber-100">${db.rating.map(r => {
-                const pel = db.pelanggan.find(p => p.id_pelanggan === r.id_pelanggan);
-                return `<tr><td class="p-3 font-bold">#${r.id_rating}</td><td class="p-3 font-bold">${pel ? pel.nama_pelanggan : 'Pelanggan'}</td><td class="p-3">${'⭐'.repeat(r.bintang)} (${r.bintang}/5)</td><td class="p-3">"${r.saran}"</td><td class="p-3">${r.tanggal_ulasan}</td><td class="p-3 text-center"><button onclick="adminDelRating(${r.id_rating})" class="px-3 py-1 bg-red-100 text-red-700 font-bold rounded-xl">Hapus</button></td></tr>`;
-              }).join('')}</tbody>
-            </table>
-          </div>`;
-      } else {
-        box.innerHTML = `
-          <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-yellow-200 space-y-6">
-            <div class="flex justify-between items-center border-b border-yellow-100 pb-4">
-              <div><h3 class="font-bold text-base text-brandBrown">📄 Laporan Transaksi & Manajemen Status Pesanan</h3><p class="text-[11px] text-gray-500">Ubah status pesanan pembeli (Proses ➔ Dikirim ➔ Selesai)</p></div>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-amber-50 border-b border-amber-200 uppercase text-brandSub"><tr><th class="p-3">ID Trx</th><th class="p-3">Pelanggan</th><th class="p-3">Metode</th><th class="p-3">Waktu</th><th class="p-3 text-right">Subtotal</th><th class="p-3 text-center">Status</th><th class="p-3 text-center">Aksi Olshop</th></tr></thead>
-                <tbody class="divide-y divide-amber-100 font-medium">${db.transaksi.map(t => {
-                  const pel = db.pelanggan.find(p => p.id_pelanggan === t.id_pelanggan);
-                  return `<tr><td class="p-3 font-bold text-amber-900">#${t.id_transaksi}</td><td class="p-3 font-bold">${pel ? pel.nama_pelanggan : t.nama_penerima}</td><td class="p-3">${t.metode_pembayaran}</td><td class="p-3 text-gray-500">${t.tanggal_transaksi}</td><td class="p-3 text-right font-extrabold">${formatRp(t.subtotal)}</td><td class="p-3 text-center"><span class="px-3 py-1 rounded-lg font-bold bg-amber-100 text-amber-900">${t.status_pesanan}</span></td><td class="p-3 text-center space-x-1"><button onclick="adminUpdateTrx(${t.id_transaksi}, 'Diproses / Verifikasi')" class="px-2 py-1 bg-amber-200 font-bold rounded text-[10px]">Proses</button><button onclick="adminUpdateTrx(${t.id_transaksi}, 'Dikirim')" class="px-2 py-1 bg-blue-200 text-blue-900 font-bold rounded text-[10px]">Kirim 🚚</button><button onclick="adminUpdateTrx(${t.id_transaksi}, 'Selesai')" class="px-2 py-1 bg-green-200 text-green-900 font-bold rounded text-[10px]">Selesai ✅</button></td></tr>`;
-                }).join('')}</tbody>
-              </table>
-            </div>
-          </div>`;
-      }
-    }
-
-    function adminUpdateTrx(id, status) {
-      const db = getDB();
-      const t = db.transaksi.find(x => x.id_transaksi === id);
-      if (t) { t.status_pesanan = status; saveDB(db); }
-      renderDashboardAdmin('overview');
-    }
-    function adminAddPelanggan(e) {
-      e.preventDefault();
-      const db = getDB();
-      db.pelanggan.push({
-        id_pelanggan: db.pelanggan.length ? Math.max(...db.pelanggan.map(x => x.id_pelanggan)) + 1 : 1,
-        nama_pelanggan: document.getElementById('adm-pel-nama').value,
-        no_telepon: document.getElementById('adm-pel-telp').value,
-        email: document.getElementById('adm-pel-email').value,
-        username: document.getElementById('adm-pel-user').value,
-        password: document.getElementById('adm-pel-pass').value
-      });
-      saveDB(db);
-      renderDashboardAdmin('pelanggan');
-    }
-    function adminDelPelanggan(id) {
-      const db = getDB();
-      db.pelanggan = db.pelanggan.filter(x => x.id_pelanggan !== id);
-      saveDB(db);
-      renderDashboardAdmin('pelanggan');
-    }
-    function adminAddProduk(e) {
-      e.preventDefault();
-      const db = getDB();
-      db.produk.push({
-        id_produk: db.produk.length ? Math.max(...db.produk.map(x => x.id_produk)) + 1 : 1,
-        nama_produk: document.getElementById('adm-prod-nama').value,
-        harga: Number(document.getElementById('adm-prod-harga').value),
-        stok: Number(document.getElementById('adm-prod-stok').value),
-        deskripsi: 'Plafon PVC kualitas premium PLAFINUT.',
-        gambar: 'uploads/1794050390_plafon-pvc.jpg'
-      });
-      saveDB(db);
-      renderDashboardAdmin('produk');
-    }
-    function adminDelProduk(id) {
-      const db = getDB();
-      db.produk = db.produk.filter(x => x.id_produk !== id);
-      saveDB(db);
-      renderDashboardAdmin('produk');
-    }
-    function adminDelRating(id) {
-      const db = getDB();
-      db.rating = db.rating.filter(x => x.id_rating !== id);
-      saveDB(db);
-      renderDashboardAdmin('ulasan');
-    }
-  </script>
+        // Inisialisasi awal
+        updateNav();
+        loadProducts();
+    </script>
 </body>
 </html>
